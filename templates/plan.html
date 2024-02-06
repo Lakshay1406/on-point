@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <style>
+        body{
+        background-image: url(../static/images/bg.jpg);
+        background-size: 100%;
+        }
+        #container{
+        background-color:white;
+        text-align:center;
+        border-radius:10%;
+        }
+        label{
+            font-size: 17px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+        }
+        #search{
+            margin-bottom:10px;
+        }
+        form{
+            padding-left:5px;
+            padding-right:14px;
+        }
+        input{
+            width:75%;
+            height:25px;
+        }
+        #container{
+            margin-top:10px !important;
+            margin:auto;
+            width: 50%;
+            border:5px solid #DE3163;
+            padding-top:5px;
+            padding-bottom:5px;
+            
+        }
+        #searchelements{
+           
+            padding-top: 15px;
+            padding-bottom:15px;
+        }
+        #tobox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #checkinbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #checkoutbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #adultcountbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #childcountbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #Submit{
+            text-align:center;
+            flex-wrap: wrap;
+            width:25%;
+            height:50px;
+            border: 0;
+  line-height: 2.5;
+  font-size: 1rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+  border-radius: 10px;
+  background-color: #DE3163;
+  background-image: linear-gradient(
+    to top left,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.2) 30%,
+    rgba(0, 0, 0, 0)
+  );
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+}
+        
+        label{
+            text-align:left;
+        }
+        h1{
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            /* margin-bottom:20px; */
+        }
+        #Submit:hover{
+            background-color: #DE3163;
+            border:1px solid #DE3163
+        }
+
+
+    </style>
+{% endblock %}
+{% block content %}
+    <center>
+        <div id="container" >
+            <form id="searchelements" method="post" action="{{url_for('plan')}}">
+                <center><h1>Plan Your Trip</h1></center>
+                <div id="frombox" >
+                <label for="from">Starting point</label><br>
+                <input id="from" name="start" type="text" placeholder="From" required >
+                </div>
+                <div id="tobox" >
+                    <label for="to"><br>Destination</label><br>
+                    <input id="to" name="end" type="text"  placeholder="To" required>
+                </div>
+                <div id="checkinbox">
+                    <label for="checkin">Check-In date</label><br>
+                    <input id="checkin" name="in-date" type="date"  placeholder="Check-in date" required>
+                </div>
+<!--                <div id="checkoutbox">-->
+<!--                    <label for="checkout">Check-out date</label><br>-->
+<!--                    <input id="checkout" name="out-date" type="date"  placeholder="Check-Out date" required>-->
+<!--                </div>-->
+                <div id="adultcountbox">
+                    <label for="adultcount">Adult</label><br>
+                    <input id="adultcount" name="adult" type="number"  min="1" required placeholder="Enter the no. of Adults" value="1">
+                    
+                </div>
+                <center><input class="btn btn-primary" type="submit" value="Submit" id="Submit"></center>
+            </form>
+            
+        </div>
+    </center>
+{% endblock %}

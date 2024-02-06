@@ -1,13 +1,6 @@
 // Leaflet has native support for raster maps, So you can create a map with a few commands only!
 
 // The Leaflet map Object
-//const start_add="st. josephs"
-//const end_add="chennai airport"
-//const from_lat =12.8699
-//const from_long =80.2184
-//const to_lat =12.9811
-//const to_long =80.1596
-function myMap(start_add,end_add,from_lat,from_long,to_lat,to_long) {
 
 const map = L.map('my-map').setView([from_lat, from_long], 12);
 
@@ -91,4 +84,3 @@ fetch(`https://api.geoapify.com/v1/routing?waypoints=${fromWaypoint.join(',')}|$
   }).addTo(map);
 
 }, error => console.log(err));
-}
