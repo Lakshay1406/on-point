@@ -124,12 +124,15 @@ def search():
 
             )
             l = response.data
+            print(l)
             flights = []
             for i in l:
                 flg=[]
+                n = len(i["itineraries"][0]["segments"]) - 1
                 flg.append(i["itineraries"][0]["duration"].lstrip('PT'))
-                flg.append((i["itineraries"][0]["segments"][0]["departure"]["at"].split('T'))[1])
-                flg.append((i["itineraries"][0]["segments"][0]["arrival"]["at"].split('T'))[1])
+                flg.append((i["itineraries"][0]["segments"][0]["departure"]["at"].split('T'))[1][:-3])
+                flg.append((i["itineraries"][0]["segments"][n]["arrival"]["at"].split('T'))[1][:-3])
+
                 code= i["itineraries"][0]["segments"][0]["carrierCode"]
                 if code!='FZ':
                     url = "https://aviation-reference-data.p.rapidapi.com/airline/"+code
@@ -144,8 +147,12 @@ def search():
                     flg.append(response.json()['name'])
                 else:
                     flg.append("FlyDubai")
-                flg.append(i["itineraries"][0]["segments"][0]["numberOfStops"])
-                flg.append(i["price"]["total"])
+                flg.append(n)
+                price = i["price"]["total"][:-3]
+                s, *d = str(price).partition(".")
+                r = ",".join([s[x - 2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+                price = "".join([r] + d)
+                flg.append(price)
                 flights.append(flg)
                 print(flg)
             return render_template('flightcard.html', flights=flights)
