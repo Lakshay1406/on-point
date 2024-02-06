@@ -1,0 +1,76 @@
+{% extends "base.html" %} {% block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
+<style>
+    body{
+    background-image: url(../static/images/bg.jpg);
+    background-size: 100%;
+    }    </style>
+{% endblock %}
+
+<div class="box">
+  <!-- TODO: Use Message Flashing to display feedback to the user with a <p> -->
+
+
+
+<div class="container">
+  <div class="row mt-5">
+    <div class="spContainer mx-auto">
+      <div class="card px-4 py-5 border-0 shadow">
+        <div class="d-inline text-left mb-3">
+          <h3 class="font-weight-bold">Login</h3>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <p style="color:red;">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+  {% endwith %}
+        <form action="{{url_for('login')}}" method="POST">
+        <div class="d-inline text-center mb-0">
+          <div class="form-group mx-auto">
+            <input class="form-control inpSp" name="email" type="text" placeholder="Email">
+          </div>
+        </div>
+        <div class="d-inline text-center mb-3">
+          <div class="form-group mx-auto">
+            <input class="form-control inpSp" name="password" type="password" placeholder="Password">
+          </div>
+        </div>
+        <div class="d-inline text-left mb-3">
+          <div class="form-group mx-auto">
+            <input type="submit" class="btn btn-primary"></input>
+            <a class="small text-black-50 pl-2 ml-2 border-left" href="">Forgot Password ?</a>
+          </div>
+        </div>
+        </form>
+        <div class="d-inline text-left mb-1">
+          <div class="form-group mx-auto mb-0">
+            <label class="text-black-50 small">or login with</label>
+          </div>
+        </div>
+        <div class="d-inline text-left">
+          <div class="form-group mx-auto">
+            <button type="button" class="btn btn-sm btn-light"> <span class="badge text-white"><i class="fab fa-google text-danger"></i></span>
+  Google
+</button>
+             <button type="button" class="btn btn-sm btn-light ml-2"> <span class="badge text-white"><i class="fab fa-facebook-f text-primary"></i></span>
+  Facebook
+</button>
+          </div>
+        </div>
+          <div class="d-inline text-left mt-3">
+          <div class="form-group mx-auto mb-0">
+            <a class="text-black font-weight-bold regStr" href="{{url_for('register')}}">Register new account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}

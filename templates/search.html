@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <style>
+        body{
+        background-image: url(../static/images/bg.jpg);
+        background-size: 100%;
+        }
+        #container{
+        background-color:white;
+        }
+
+        label{
+            font-size: 17px;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+        }
+        #search{
+            margin-bottom:10px;
+
+        }
+        form{
+            padding-left:5px;
+            padding-right:14px;
+        }
+        input{
+            width:100%;
+            height:25px;
+        }
+        #container{
+            margin:auto;
+            width: 50%;
+            border:5px solid grey;
+            padding-top:5px;
+            padding-bottom:5px;
+            
+        }
+        #searchelements{
+           
+            padding-top: 15px;
+            padding-bottom:15px;
+        }
+        #tobox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #checkinbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #checkoutbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #adultcountbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #childcountbox{
+            padding-top:5px;
+            padding-bottom:15px;
+        }
+        #Submit{
+            width:75px;
+            text-align:center;
+        }
+        label{
+            text-align:left;
+        }
+
+
+    </style>
+
+{% endblock %}
+{% block content %}
+    <main>
+        <center>
+        <div id="container">
+            <form id="searchelements" method="post" action="{{url_for('search')}}">
+                <center><h1>Plan Your Trip</h1></center>
+                <div id="frombox" >
+                <label for="from">Starting point</label><br>
+                <input id="from" name="start" type="text" placeholder="From" required >
+                </div>
+                <div id="tobox" >
+                    <label for="to"><br>Destination</label><br>
+                    <input id="to" name="end" type="text"  placeholder="To" required>
+                </div>
+                <div id="checkinbox">
+                    <label for="checkin">Check-In date</label><br>
+                    <input id="checkin" name="in-date" type="date"  placeholder="Check-in date" required>
+                </div>
+                <div id="checkoutbox">
+                    <label for="checkout">Check-out date</label><br>
+                    <input id="checkout" name="out-date" type="date"  placeholder="Check-Out date" required>
+                </div>
+                <div id="adultcountbox">
+                    <label for="adultcount">Adult</label><br>
+                    <input id="adultcount" name="adult" type="number"  min="1" required>
+                    
+                </div>
+                <div id="childcountbox">
+                    <label for="childrencount">Child</label><br>
+                    <input id="childcount" name="child" type="number">
+                </div>
+                <center><input type="submit" id="Submit" value="Submit"></center>
+            </form>
+            
+        </div>
+    </center>
+    </main>
+{% endblock %}

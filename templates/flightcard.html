@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<style>
+        #card{
+            margin-top:10px;
+            border-radius: 10px;
+            border:3px solid white;
+            background-color: white;
+            max-width:75%;
+            height:100px;
+            margin:auto;
+            position:relative;
+            box-shadow: 2px 2px 5px #696969;
+        }
+        #airlinesname{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:larger;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:5px;
+            float:left;
+            margin-left:25px;
+        }
+        #departure{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:larger;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:75px;
+            float:left;
+            margin-left:200px;
+        }
+        #duration{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:larger;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:125px;
+            float:left;
+            margin-left:350px;
+        }
+        #arrival{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:larger;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:197px;
+            float:left;
+            margin-left:550px;
+        }
+        #prices{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:larger;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:245px;
+            float:left;
+            margin-left:700px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <main>
+        {% for flg in flights %}
+        <div id="card" class="my-4">
+            <div id="airlinesname">{{flg[3]}}</div>
+            <div id="departure">{{flg[1]}}<br><center>Departure</center></div>
+            <div id="duration">{{flg[0]}}<br><center>{{flg[4]}} Stops</center></div>
+            <div id="arrival">{{flg[2]}}<br><center>Arrival</center></div>
+            <div id="prices">Rs.{{flg[5]}}<br><center>Per Adult</center></div>
+        </div>
+        {% endfor %}
+    </main>
+{% endblock %}
+    
