@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #222a2c;
+            color: #f9f4f4;
+            text-align: center;
+            padding: 1em;
+        }
+
+        section {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #ffffff;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #010101;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+
+    <header>
+        <h1>About Us</h1>
+    </header>
+
+    <section>
+        <h4>Introduction:</h4>
+        <p>Welcome to the ON_POINT Travel Blog – your passport to a world of adventure, culture, and unforgettable experiences. At ON_POINT, we believe that travel is not just about reaching a destination; it's about embracing the journey, discovering new horizons, and creating lasting memories. Join us as we take you on a virtual tour of the incredible international packages we have carefully curated for you. ON_POINT believes in providing a touch of luxury that enhances your travel experience. </p>
+        
+        <h2>Our Story:</h2>
+        <p>At On-Point, our mission is to inspire and empower travelers to explore the world with curiosity, respect, and a sense of adventure. We strive to curate unique travel experiences that go beyond the ordinary, allowing our community to immerse themselves in the beauty and diversity of our planet while promoting sustainability and responsible tourism practices.</p>
+      
+        <h3>Our Mission:</h3>
+        <p>On-Point was born out of a shared passion for exploration and a desire to make route tracking and navigation more accessible to adventurers of all backgrounds. Inspired by our own experiences navigating the great outdoors, we set out to create a platform that simplifies route planning, fosters community engagement, and encourages exploration in all its forms. </p>
+    </section>
+
+{% endblock %}

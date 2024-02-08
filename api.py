@@ -10,12 +10,12 @@ def calc_lat_long(add):
     querystring = {"address": add}
 
     headers = {
-        "X-RapidAPI-Key": "23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b",
+        "X-RapidAPI-Key": '136cf44661mshc22401834c78724p19cdc9jsn9aabfae8195e',
         "X-RapidAPI-Host": "address-from-to-latitude-longitude.p.rapidapi.com"
     }
 
     response = requests.get(url, headers=headers, params=querystring)
-
+    print(response.json())
     from_lat = response.json()['Results'][0]["latitude"]
     from_long = response.json()['Results'][0]["longitude"]
     # city = response.json()['Results'][0]["city"]
@@ -33,12 +33,13 @@ def calc_lat_long(add):
             longitude=from_long,
             latitude=from_lat,
         )
-        #print(response.data)
+        # print(response.data)
         airport_name = response.data[0]['name']
         airport_code = response.data[0]['iataCode']
         to_lat = response.data[0]['geoCode']["latitude"]
         to_long = response.data[0]['geoCode']["longitude"]
+        dist = response.data[0]['distance']["value"]
 
     except ResponseError as error:
         print(error)
-    return from_lat, from_long, airport_name, airport_code, to_lat, to_long
+    return from_lat, from_long, airport_name, airport_code, to_lat, to_long, dist

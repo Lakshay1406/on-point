@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <style>
+        .container{
+            border:2px solid grey;
+            border-radius: 20px;
+            display:flex;
+            height:auto;
+            max-width: 75%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap:50px;
+        }
+        .box{
+            /* margin-top: 5px;
+            margin-bottom: 5px; */
+            /* border:2px solid black; */
+            width:100%;
+            height: auto;
+            font-size: x-large;
+        }
+        #line{
+            border:2px solid grey;
+            width:90%;
+            border-radius: 50px;
+            margin:0px;
+            /* box-shadow: ; */
+        }
+        .marker{
+            margin-top:5px;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            gap:50px;
+            
+        }
+        .location{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            gap:30px;
+            margin-top:50px;
+           
+        }
+        .endcard{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            gap:150px;
+            margin-top:50px;
+            margin-bottom:10px;
+        }
+        /* img{
+            border:1px solid black;
+        } */
+        .AirportBox{
+            height:100px;
+        }
+        #card{
+            margin-top:10px;
+            border-radius: 10px;
+            border:3px solid white;
+            background-color: white;
+            max-width:100%;
+            height:100px;
+            margin:auto;
+            position:relative;
+            box-shadow: 2px 2px 5px #696969;
+        }
+        #airlinesname{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:small;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:5px;
+            float:left;
+            margin-left:25px;
+        }
+        #departure{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:small;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:75px;
+            float:left;
+            margin-left:200px;
+        }
+        #duration{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:small;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:125px;
+            float:left;
+            margin-left:350px;
+        }
+        #arrival{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:small;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:197px;
+            float:left;
+            margin-left:550px;
+        }
+        #prices{
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:small;
+            background-color: white;
+            position:absolute;
+            top:37px;
+            left:245px;
+            float:left;
+            margin-left:700px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <main>
+        <div class="container main-box">
+            <div class="box CabBox1">
+                <div class="marker">
+                    <div id="A">A</div>
+                    <div id="arrow"><img src="../static/images/arrow.png" width="35px" height="35px"></div>
+                    <div id="B">B</div>
+                </div>
+                <div class="location">
+                    <div id="start">{{start_add}}</div>
+                    <div id="arrow"><img src="../static/images/arrow.png" width="35px" height="35px"></div>
+                    <div id="loc_departure">{{start_air}} Airport</div>
+                </div>
+                <div class="endcard">
+                    <div id="cost">Cost:Rs.{{start_fare}}</div>
+                    <div id="time">Time:{{start_cab_time}}</div>
+                    <div id="showmap" ><a class="btn btn-outline-dark" href="{{url_for('map',start_add=start_add,id=1)}}">Show map route..</a></div>
+                </div>
+            </div>
+            <div id="line"></div>
+            <div class="box AirportBox">
+
+                <div class="marker">
+                    <div id="A">B</div>
+                    <div id="arrow"><img src="../static/images/arrow.png" width="35px" height="35px"></div>
+                    <div id="B">C</div>
+                </div>
+                <!-- insert the airport details here -->
+                <!-- just copy and paste and let me know is this fine -->
+                <div id="card">
+                <div id="airlinesname">{{flg[3]}}</div>
+                <div id="departure">{{flg[1]}}<br><center>Departure</center></div>
+                <div id="duration">{{flg[0]}}<br><center>{{flg[4]}} Stops</center></div>
+                <div id="arrival">{{flg[2]}}<br><center>Arrival</center></div>
+                <div id="prices">Rs.{{flg[5]+flg[6]}}<br><center>Per Adult</center></div>
+                </div>
+            </div>
+            <div id="line" class=""></div>
+            <div class="box CabBox2">
+                <div class="marker">
+                    <div id="C">C</div>
+                    <div id="arrow"><img src="../static/images/arrow.png" width="35px" height="35px"></div>
+                    <div id="D">D</div>
+                </div>
+                <div class="location">
+                    <div id="loc_arrival">{{end_air}} Airport</div>
+                    <div id="arrow"><img src="../static/images/arrow.png" width="35px" height="35px"></div>
+                    <div id="destination">{{end_add}}</div>
+                </div>
+                <div class="endcard">
+                    <div id="cost">Cost:Rs.{{end_fare}}</div>
+                    <div id="time">Time:{{end_cab_time}}</div>
+                    <div id="showmap"><a class="btn btn-outline-dark" href="{{url_for('map',end_add=end_add,id=2)}}">Show map route..</a></div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

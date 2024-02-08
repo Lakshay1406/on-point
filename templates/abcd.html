@@ -18,9 +18,17 @@
             position:relative;
             overflow:auto;
         }
+        .excess{
+              font-size: 12px;
+              display:inline-block;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 13ch;
+        }
         .box{
             font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            font-size: x-large;
+            font-size: 15px;
             /* border:2px solid #818589;
             box-shadow: 3px 3px 6px #818589;
             border-radius: 5px; */
@@ -60,43 +68,21 @@
 {% endblock %}
 {% block content %}
     <main>
+        {% for flg in flights %}
         <div class="container">
-            <div id="A" class="box boxA">A<br><center>Address</center></div>
+            <div id="A" class="box boxA">A<br><center><span class="excess">{{start_add}}</span></center></div>
             <div id="Arrow" class="box arrow arrow1"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="B" class="box boxB">B<br><center>departure</center></div>
+            <div id="B" class="box boxB">B<br><center><span>{{start_air}}</span></center></div>
             <div id="Arrow" class="box arrow arrow2"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="C" class="box boxC">C<br><center>arrival</center></div>
+            <div id="C" class="box boxC">C<br><center><span>{{end_air}}</span></center></div>
             <div id="Arrow" class="box arrow arrow3"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="D" class="box boxD">D<br><center>destination</center></div>
-            <div id="showroute" class="box boxroute"><a href="showroute.html">Show Route</a></div>
-            <div id="totalcost" class="box boxtotalcost">Total Cost:</div>
-            <div id="totattime" class="box boxtotaltime">Total Time:</div>
+            <div id="D" class="box boxD">D<br><center><span class="excess">{{end_add}}</span></center></div>
+            <div id="More details..." class="box boxroute"><a class="btn btn-outline-dark" href="{{url_for('final',start_cab_time=start_cab_time,end_cab_time=end_cab_time,start_fare=start_fare,end_fare=end_fare,end_air=end_air,start_air=start_air,flg=[flg],start_add=start_add,end_add=end_add)}}">More details...</a></div>
+            <div id="totalcost" class="box boxtotalcost">Total Cost:Rs.{{flg[5]}}+{{start_fare+end_fare}}</div>
+            <div id="totattime" class="box boxtotaltime">Total Time:{{flg[0]}}+{{start_cab_time+end_cab_time}}M</div>
          </div>
-        <div class="container">
-            <div id="A" class="box boxA">A<br><center>Address</center></div>
-            <div id="Arrow" class="box arrow arrow1"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="B" class="box boxB">B<br><center>departure</center></div>
-            <div id="Arrow" class="box arrow arrow2"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="C" class="box boxC">C<br><center>arrival</center></div>
-            <div id="Arrow" class="box arrow arrow3"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="D" class="box boxD">D<br><center>destination</center></div>
-            <div id="showroute" class="box boxroute"><a href="showroute.html">Show Route</a></div>
-            <div id="totalcost" class="box boxtotalcost">Total Cost:</div>
-            <div id="totattime" class="box boxtotaltime">Total Time:</div>
-         </div>
-        <div class="container">
-            <div id="A" class="box boxA">A<br><center>Address</center></div>
-            <div id="Arrow" class="box arrow arrow1"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="B" class="box boxB">B<br><center>departure</center></div>
-            <div id="Arrow" class="box arrow arrow2"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="C" class="box boxC">C<br><center>arrival</center></div>
-            <div id="Arrow" class="box arrow arrow3"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="D" class="box boxD">D<br><center>destination</center></div>
-            <div id="showroute" class="box boxroute"><a href="showroute.html">Show Route</a></div>
-            <div id="totalcost" class="box boxtotalcost">Total Cost:</div>
-            <div id="totattime" class="box boxtotaltime">Total Time:</div>
-         </div>
+        {% endfor %}
     </main>
-    <footer></footer>
+
     
 {% endblock %}
