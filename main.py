@@ -1,10 +1,9 @@
 import requests as requests
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from api import calc_lat_long
 from werkzeug.utils import secure_filename
 import os
 from functools import wraps
@@ -81,45 +80,34 @@ def register():
 
         login_user(new_user)
 
-        return redirect(url_for("plan"))
+        return redirect(url_for("search"))
     return render_template("register.html")
-
-
-
 
 
 @app.route('/map', methods=["GET", "POST"])
 def map():
-
-    start_add ="st.josephs"
+    start_add = "st. josephs"
     end_add = "chennai airport"
-    from_lat = "13.0832"
-    from_long = "80.2755"
-    to_lat = "12.9811"
-    to_long = "80.1596"
-    cords = {'start_add': start_add, 'end_add': end_add, 'from_lat': from_lat, 'from_long': from_long, 'to_lat': to_lat,
-             'to_long': to_long}
+    from_lat = 12.8699
+    from_long = 80.2184
+    to_lat = 12.9811
+    to_long = 80.1596
+    cords = [start_add, end_add, from_lat, from_long, to_lat, to_long]
     return render_template('map.html', cords=cords)
 
 
-@app.route('/plan', methods=["GET", "POST"])
-def plan():
+@app.route('/search', methods=["GET", "POST"])
+def search():
     if request.method == 'POST':
         start = request.form.get('start')
         end = request.form.get('end')
         indate = request.form.get('in-date')
-        # outdate = request.form.get('out-date')
+        outdate = request.form.get('out-date')
         adult = request.form.get('adult')
-        # child = request.form.get('child')
-        print(start, end, indate, adult)
-        
-        # converting to IATA code for flight search
-        start = calc_lat_long(start)[3]
-        end = calc_lat_long(end)[3]
-        print(start,end)
+        child = request.form.get('child')
+        print(start, end, indate, outdate, adult, child)
 
-
-        # flight offer search api calling and getting required values
+        #api calling and getting required values
 
         amadeus = Client(
             client_id='7KUpum4cjVAHkMvdn0GR0nbrIzYFGHd0',
@@ -136,18 +124,15 @@ def plan():
 
             )
             l = response.data
-            print(l)
             flights = []
             for i in l:
-                flg = []
-                n = len(i["itineraries"][0]["segments"]) - 1
+                flg=[]
                 flg.append(i["itineraries"][0]["duration"].lstrip('PT'))
-                flg.append((i["itineraries"][0]["segments"][0]["departure"]["at"].split('T'))[1][:-3])
-                flg.append((i["itineraries"][0]["segments"][n]["arrival"]["at"].split('T'))[1][:-3])
-
-                code = i["itineraries"][0]["segments"][0]["carrierCode"]
-                if code != 'FZ':
-                    url = "https://aviation-reference-data.p.rapidapi.com/airline/" + code
+                flg.append((i["itineraries"][0]["segments"][0]["departure"]["at"].split('T'))[1])
+                flg.append((i["itineraries"][0]["segments"][0]["arrival"]["at"].split('T'))[1])
+                code= i["itineraries"][0]["segments"][0]["carrierCode"]
+                if code!='FZ':
+                    url = "https://aviation-reference-data.p.rapidapi.com/airline/"+code
 
                     headers = {
                         "X-RapidAPI-Key": "23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b",
@@ -159,23 +144,17 @@ def plan():
                     flg.append(response.json()['name'])
                 else:
                     flg.append("FlyDubai")
-                flg.append(n)
-                price = i["price"]["total"][:-3]
-                s, *d = str(price).partition(".")
-                r = ",".join([s[x - 2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
-                price = "".join([r] + d)
-                flg.append(price)
+                flg.append(i["itineraries"][0]["segments"][0]["numberOfStops"])
+                flg.append(i["price"]["total"])
                 flights.append(flg)
                 print(flg)
             return render_template('flightcard.html', flights=flights)
         except ResponseError as error:
             print(error)
 
-    return render_template('plan.html')
+    return render_template('search.html')
 
-@app.route('/abcd', methods=["GET", "POST"])
-def abcd():
-    return render_template('abcd.html')
+
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -190,7 +169,7 @@ def login():
         if check_password_hash(user.password, password):
             login_user(user)
 
-            return redirect(url_for('plan'))
+            return redirect(url_for('search'))
         else:
             flash('Password incorrect, please try again')
             return render_template("login.html")
