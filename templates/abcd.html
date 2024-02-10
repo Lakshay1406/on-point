@@ -19,21 +19,18 @@
             overflow:auto;
         }
         .excess{
-              font-size: 12px;
+              font-size: 14px;
               display:inline-block;
               white-space: nowrap;
               overflow: hidden;
-              text-overflow: ellipsis;
-              max-width: 13ch;
+              text-overflow: ellipsis !important;
+              max-width: 20ch;
         }
         .box{
             font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            font-size: 15px;
-            /* border:2px solid #818589;
-            box-shadow: 3px 3px 6px #818589;
-            border-radius: 5px; */
-            padding:10px 10px 10px 10px;
-            margin:10px 10px 10px 10px;
+            font-size: 14px;
+            padding:6px 6px 6px 6px;
+            margin:8px 8px 8px 8px;
             text-align:center;
         }
         .boxroute{
@@ -58,11 +55,12 @@
             top:15px;
         }
         .arrow2{
-            left:500px;
+            left:525px;
         }
         .arrow3{
-            left:700px;
+            left:750px;
         }
+
         
     </style>
 {% endblock %}
@@ -70,13 +68,13 @@
     <main>
         {% for flg in flights %}
         <div class="container">
-            <div id="A" class="box boxA">A<br><center><span class="excess">{{start_add}}</span></center></div>
-            <div id="Arrow" class="box arrow arrow1"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="B" class="box boxB">B<br><center><span>{{start_air}}</span></center></div>
-            <div id="Arrow" class="box arrow arrow2"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="C" class="box boxC">C<br><center><span>{{end_air}}</span></center></div>
-            <div id="Arrow" class="box arrow arrow3"><img src="../static/images/arrow.png" width="50px" height="50px"></div>
-            <div id="D" class="box boxD">D<br><center><span class="excess">{{end_add}}</span></center></div>
+            <div id="A" class="box boxA"><span class="fs-5">A</span><br><center><span class="excess">{{start_add}}</span></center></div>
+            <div id="Arrow" class="box arrow arrow1"><i style = "color:red;" class="bi bi-arrow-right h2"></i></div>
+            <div id="B" class="box boxB"><span class="fs-5">B</span><br><center><span>{{start_air}}<br>Airport</span></center></div>
+            <div id="Arrow" class="box arrow arrow2"><i style = "color:red;" class="bi bi-arrow-right h2"></i></div>
+            <div id="C" class="box boxC"><span class="fs-5">C</span><br><center><span>{{end_air}}<br>Airport</span></center></div>
+            <div id="Arrow" class="box arrow arrow3"><i style = "color:red;" class="bi bi-arrow-right h2"></i></div>
+            <div id="D" class="box boxD"><span class="fs-5">D</span><br><center><span class="excess">{{end_add}}</span></center></div>
             <div id="More details..." class="box boxroute"><a class="btn btn-outline-dark" href="{{url_for('final',start_cab_time=start_cab_time,end_cab_time=end_cab_time,start_fare=start_fare,end_fare=end_fare,end_air=end_air,start_air=start_air,flg=[flg],start_add=start_add,end_add=end_add)}}">More details...</a></div>
             <div id="totalcost" class="box boxtotalcost">Total Cost:Rs.{{flg[5]}}+{{start_fare+end_fare}}</div>
             <div id="totattime" class="box boxtotaltime">Total Time:{{flg[0]}}+{{start_cab_time+end_cab_time}}M</div>

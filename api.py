@@ -10,11 +10,13 @@ def calc_lat_long(add):
     querystring = {"address": add}
 
     headers = {
-        "X-RapidAPI-Key": '136cf44661mshc22401834c78724p19cdc9jsn9aabfae8195e',
+        "X-RapidAPI-Key": '46b2411b49msh40cf2b346bc2a84p18f5ffjsn463cab377871',
         "X-RapidAPI-Host": "address-from-to-latitude-longitude.p.rapidapi.com"
     }
 
     response = requests.get(url, headers=headers, params=querystring)
+    data = response.text
+    print(data)
     print(response.json())
     from_lat = response.json()['Results'][0]["latitude"]
     from_long = response.json()['Results'][0]["longitude"]

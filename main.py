@@ -134,7 +134,7 @@ def plan():
         # converting to IATA code for flight search
         start_calc = calc_lat_long(start_add)
         start= start_calc[3]
-        start_air = start_calc[2]
+        start_air = start_calc[2].capitalize()
 
 
         ## assuming cab fare to be rs 15 per km
@@ -143,7 +143,7 @@ def plan():
         start_cab_time=int((start_calc[6]/30)*60)
         end_calc = calc_lat_long(end_add)
         end=end_calc[3]
-        end_air = end_calc[2]
+        end_air = end_calc[2].capitalize()
         end_fare = end_calc[6] * 15
         end_cab_time = int((end_calc[6] / 30)*60)
         print(start,end, start_calc[6],end_calc[6])
@@ -162,7 +162,7 @@ def plan():
                 departureDate=indate,
                 adults=adult,
                 currencyCode='INR',
-                max=10,
+                max=4,
 
             )
             l = response.data
@@ -180,7 +180,7 @@ def plan():
                     url = "https://aviation-reference-data.p.rapidapi.com/airline/" + code
 
                     headers = {
-                        "X-RapidAPI-Key": "23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b",
+                        "X-RapidAPI-Key": "3f0c1fbad2msh646adf4f427213ep18e805jsn66ed0b25352a",
                         "X-RapidAPI-Host": "aviation-reference-data.p.rapidapi.com"
                     }
 
