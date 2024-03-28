@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_css %}
-    <style>
+        <style>
         body{
         background-image: url(../static/images/bg.jpg);
         background-size: 100%;
@@ -103,7 +103,7 @@
 {% block content %}
     <center>
         <div id="container" >
-            <form id="searchelements" method="post" action="{{url_for('plan')}}">
+            <form id="searchelements" method="post" action="{{url_for('loading')}}">
                 <center><h1>Plan Your Trip</h1></center>
                 <div id="frombox" >
                 <label for="from">Starting point</label><br>
@@ -128,7 +128,10 @@
                 </div>
                 <center><input class="btn btn-primary" type="submit" value="Submit" id="Submit"></center>
             </form>
+
             
         </div>
     </center>
+
+
 {% endblock %}

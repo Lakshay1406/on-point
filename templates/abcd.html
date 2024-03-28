@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_css %}
-    <style>
+        <style>
         .container{
             margin-top:20px !important;
             border:2px solid #818589;
@@ -65,7 +65,8 @@
     </style>
 {% endblock %}
 {% block content %}
-    <main>
+
+    <main class="main">
         {% for flg in flights %}
         <div class="container">
             <div id="A" class="box boxA"><span class="fs-5">A</span><br><center><span class="excess">{{start_add}}</span></center></div>
@@ -81,6 +82,7 @@
          </div>
         {% endfor %}
     </main>
+
 
     
 {% endblock %}

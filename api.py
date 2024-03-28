@@ -10,7 +10,7 @@ def calc_lat_long(add):
     querystring = {"address": add}
 
     headers = {
-        "X-RapidAPI-Key": '46b2411b49msh40cf2b346bc2a84p18f5ffjsn463cab377871',
+        "X-RapidAPI-Key": '3813f5e554msheaa31e90e985c7ep116172jsn0ce5a97bccf5',
         "X-RapidAPI-Host": "address-from-to-latitude-longitude.p.rapidapi.com"
     }
 
@@ -44,4 +44,11 @@ def calc_lat_long(add):
 
     except ResponseError as error:
         print(error)
-    return from_lat, from_long, airport_name, airport_code, to_lat, to_long, dist
+    return {"from_lat":from_lat,
+            "from_long":from_long,
+            "airport_name":airport_name,
+            "airport_code":airport_code,
+            "to_lat":to_lat,
+            "to_long":to_long,
+            "dist":dist,
+            }

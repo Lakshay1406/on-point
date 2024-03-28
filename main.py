@@ -1,7 +1,8 @@
 import requests as requests
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, session
 from flask_bootstrap import Bootstrap5
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
+from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from api import calc_lat_long
@@ -15,6 +16,9 @@ from amadeus import Client, ResponseError
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8Badawdawdb'
 bootstrap = Bootstrap5(app)
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -58,10 +62,115 @@ with app.app_context():
 def home():
     return render_template('index.html')
 
+@app.route("/loading", methods=["POST"])
+def loading():
+    if request.method == "POST":
+        # We'll use a session object to save the data sent by the user for processing
+        session["start_add"] = request.form.get("start")
+        session["end_add"] = request.form.get('end')
+        session["indate"] = request.form.get('in-date')
+        session["adult"] = request.form.get('adult')
+        return render_template("loading.html")
 
 @app.route('/abcd', methods=["GET", "POST"])
 def abcd():
-    return render_template('abcd.html')
+    start_add=session["start_add"]
+    end_add=session["end_add"]
+    indate=session["indate"]
+    adult=session["adult"]
+    print(start_add, end_add, indate, adult)
+
+
+    start_calc = calc_lat_long(start_add)
+
+    ##coordinates saved in session
+    session["st_from_lat"]=start_calc["from_lat"]
+    session["st_from_long"] = start_calc["from_long"]
+    session["st_to_lat"] = start_calc["to_lat"]
+    session["st_to_long"]=start_calc["to_long"]
+
+    # converting to IATA code for flight search
+    start = start_calc["airport_code"]
+    start_air = start_calc["airport_name"].capitalize()
+    session["start_air"]=start_air
+
+    ## assuming cab fare to be rs 15 per km
+    ## assuming cab travels at 30km/hr
+    start_fare = start_calc["dist"] * 15
+    start_cab_time = int((start_calc["dist"] / 30) * 60)
+
+
+    ## end_location
+    end_calc = calc_lat_long(end_add)
+    ##coordinates saved in session
+    session["ed_from_lat"] = end_calc["from_lat"]
+    session["ed_from_long"] = end_calc["from_long"]
+    session["ed_to_lat"] = end_calc["to_lat"]
+    session["ed_to_long"] = end_calc["to_long"]
+
+
+
+    end = end_calc["airport_code"]
+    end_air = end_calc["airport_name"].capitalize()
+    session["end_air"]=end_air
+    end_fare = end_calc["dist"] * 15
+    end_cab_time = int((end_calc["dist"] / 30) * 60)
+    print(start, end, start_calc["dist"], end_calc["dist"])
+
+    # flight offer search api calling and getting required values
+
+    amadeus = Client(
+        client_id='7KUpum4cjVAHkMvdn0GR0nbrIzYFGHd0',
+        client_secret='n8ZUaNGtyIDRwuBY'
+    )
+    try:
+        response = amadeus.shopping.flight_offers_search.get(
+            originLocationCode=start,
+            destinationLocationCode=end,
+            departureDate=indate,
+            adults=adult,
+            currencyCode='INR',
+            max=4,
+
+        )
+        l = response.data
+        print(l)
+        flights = []
+        for i in l:
+            flg = []
+            n = len(i["itineraries"][0]["segments"]) - 1
+            flg.append(i["itineraries"][0]["duration"].lstrip('PT'))
+            flg.append((i["itineraries"][0]["segments"][0]["departure"]["at"].split('T'))[1][:-3])
+            flg.append((i["itineraries"][0]["segments"][n]["arrival"]["at"].split('T'))[1][:-3])
+
+            code = i["itineraries"][0]["segments"][0]["carrierCode"]
+            if code != 'FZ':
+                url = "https://aviation-reference-data.p.rapidapi.com/airline/" + code
+
+                headers = {
+                    "X-RapidAPI-Key": "3813f5e554msheaa31e90e985c7ep116172jsn0ce5a97bccf5",
+                    "X-RapidAPI-Host": "aviation-reference-data.p.rapidapi.com"
+                }
+
+                response = requests.get(url, headers=headers)
+
+                flg.append(response.json()['name'])
+            else:
+                flg.append("FlyDubai")
+            flg.append(n)
+            price = i["price"]["total"][:-3]
+            s, *d = str(price).partition(".")
+            r = ",".join([s[x - 2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+            price = "".join([r] + d)
+            flg.append(price)
+            flights.append(flg)
+            print(flg)
+        return render_template('abcd.html', start_cab_time=start_cab_time, end_cab_time=end_cab_time,
+                               start_fare=start_fare, end_fare=end_fare, start_add=start_add, end_add=end_add,
+                               start_air=start_air, end_air=end_air, flights=flights)
+    except ResponseError as error:
+        print(error)
+
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -97,24 +206,19 @@ def map():
     num=int(request.args.get('id'))
     print(num)
     if num==1:
-        print('hi')
-        start_add =request.args.get('start_add')
-        print(start_add)
-        calc = calc_lat_long(start_add)
-        end_add = calc[2]
-        from_lat = calc[0]
-        from_long = calc[1]
-        to_lat = calc[4]
-        to_long = calc[5]
+        start_add =session["start_add"]
+        end_add = session["start_air"]
+        from_lat =session["st_from_lat"]
+        from_long=session["st_from_long"]
+        to_lat=session["st_to_lat"]
+        to_long=session["st_to_long"]
     elif num==2:
-        print('bye')
-        end_add =request.args.get('end_add')
-        calc = calc_lat_long(end_add)
-        start_add = calc[2]
-        from_lat = calc[4]
-        from_long = calc[5]
-        to_lat = calc[0]
-        to_long = calc[1]
+        start_add=session["end_air"]
+        end_add = session["end_add"]
+        to_lat = session["ed_from_lat"]
+        to_long = session["ed_from_long"]
+        from_lat = session["ed_to_lat"]
+        from_long = session["ed_to_long"]
     cords = {'start_add': start_add, 'end_add': end_add, 'from_lat': from_lat, 'from_long': from_long, 'to_lat': to_lat,
              'to_long': to_long}
     return render_template('map.html', cords=cords)
@@ -122,84 +226,13 @@ def map():
 
 @app.route('/plan', methods=["GET", "POST"])
 def plan():
-    if request.method == 'POST':
-        start_add = request.form.get('start')
-        end_add = request.form.get('end')
-        indate = request.form.get('in-date')
-        # outdate = request.form.get('out-date')
-        adult = request.form.get('adult')
-        # child = request.form.get('child')
-        print(start_add, end_add, indate, adult)
-        
-        # converting to IATA code for flight search
-        start_calc = calc_lat_long(start_add)
-        start= start_calc[3]
-        start_air = start_calc[2].capitalize()
-
-
-        ## assuming cab fare to be rs 15 per km
-        ## assuming cab travels at 30km/hr
-        start_fare=start_calc[6]*15
-        start_cab_time=int((start_calc[6]/30)*60)
-        end_calc = calc_lat_long(end_add)
-        end=end_calc[3]
-        end_air = end_calc[2].capitalize()
-        end_fare = end_calc[6] * 15
-        end_cab_time = int((end_calc[6] / 30)*60)
-        print(start,end, start_calc[6],end_calc[6])
-
-
-        # flight offer search api calling and getting required values
-
-        amadeus = Client(
-            client_id='7KUpum4cjVAHkMvdn0GR0nbrIzYFGHd0',
-            client_secret='n8ZUaNGtyIDRwuBY'
-        )
-        try:
-            response = amadeus.shopping.flight_offers_search.get(
-                originLocationCode=start,
-                destinationLocationCode=end,
-                departureDate=indate,
-                adults=adult,
-                currencyCode='INR',
-                max=4,
-
-            )
-            l = response.data
-            print(l)
-            flights = []
-            for i in l:
-                flg = []
-                n = len(i["itineraries"][0]["segments"]) - 1
-                flg.append(i["itineraries"][0]["duration"].lstrip('PT'))
-                flg.append((i["itineraries"][0]["segments"][0]["departure"]["at"].split('T'))[1][:-3])
-                flg.append((i["itineraries"][0]["segments"][n]["arrival"]["at"].split('T'))[1][:-3])
-
-                code = i["itineraries"][0]["segments"][0]["carrierCode"]
-                if code != 'FZ':
-                    url = "https://aviation-reference-data.p.rapidapi.com/airline/" + code
-
-                    headers = {
-                        "X-RapidAPI-Key": "3f0c1fbad2msh646adf4f427213ep18e805jsn66ed0b25352a",
-                        "X-RapidAPI-Host": "aviation-reference-data.p.rapidapi.com"
-                    }
-
-                    response = requests.get(url, headers=headers)
-
-                    flg.append(response.json()['name'])
-                else:
-                    flg.append("FlyDubai")
-                flg.append(n)
-                price = i["price"]["total"][:-3]
-                s, *d = str(price).partition(".")
-                r = ",".join([s[x - 2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
-                price = "".join([r] + d)
-                flg.append(price)
-                flights.append(flg)
-                print(flg)
-            return render_template('abcd.html', start_cab_time=start_cab_time,end_cab_time=end_cab_time,start_fare=start_fare,end_fare=end_fare,start_add=start_add, end_add=end_add,start_air=start_air,end_air=end_air, flights=flights)
-        except ResponseError as error:
-            print(error)
+    # if request.method == 'POST':
+    #     start_add = request.form.get('start')
+    #     end_add = request.form.get('end')
+    #     indate = request.form.get('in-date')
+    #     # outdate = request.form.get('out-date')
+    #     adult = request.form.get('adult')
+    #     # child = request.form.get('child')
 
     return render_template('plan.html')
 
@@ -257,4 +290,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=True, port=5000)
