@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block extra_css %}
 <style>
-    body{
-    background-image: url(../static/images/background.jpg);
-    background-size: 100%;
-
+    body {
+        background-image: url(../static/images/background.jpg);
+        background-size: cover; /* Cover the entire background */
+        background-repeat: no-repeat; /* Prevent image from repeating */
+        background-position: center; /* Center the background */
     }
-
 </style>
 {% endblock %}
 
@@ -21,7 +21,6 @@ Where every turn counts, your journey optimized.<br>
 Navigate with ease, explore with confidence.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <a type="button" class="btn btn-primary btn-lg px-4 gap-3" href="{{ url_for('plan') }}" >Explore Now!</a>
-
       </div>
     </div>
   </div>
