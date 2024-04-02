@@ -2,17 +2,24 @@
 {% block extra_css %}
 <style>
     body {
-        background-image: url(../static/images/background.jpg);
+        background-image: url(../static/images/travel2.jpeg);
         background-size: cover; /* Cover the entire background */
         background-repeat: no-repeat; /* Prevent image from repeating */
         background-position: center; /* Center the background */
     }
+    .blurred-background {
+      backdrop-filter: blur(5px); /* Apply blur effect */
+      padding: 20px; /* Adjust padding as needed */
+      width: 70%; /* Set a specific width */
+      margin: auto; /* Center the div horizontally */
+      border-radius: 15px; /* Optional: Add rounded corners */
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="px-4 py-5 my-5 text-center">
+<div class="px-4 py-5 my-5 text-center blurred-background">
 <!--    <img class="d-block mx-auto mb-4" src="../static/images/icons8-cart-24.png" alt="" width="72" height="57">-->
     <h1 class="display-5 fw-bold text-body-emphasis" style="color:#E3242B;">Onward and On Point, <br>towards your destination.</h1>
     <div class="col-lg-6 mx-auto">
@@ -21,6 +28,7 @@ Where every turn counts, your journey optimized.<br>
 Navigate with ease, explore with confidence.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <a type="button" class="btn btn-primary btn-lg px-4 gap-3" href="{{ url_for('plan') }}" >Explore Now!</a>
+        <a type="button" class="btn btn-primary btn-lg px-4 gap-3" href="{{ url_for('budget') }}" >Plan your trip!</a>
       </div>
     </div>
   </div>

@@ -288,6 +288,9 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/budget')
+def budget():
+    return render_template('budget.html')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
