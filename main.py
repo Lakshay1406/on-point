@@ -1,5 +1,5 @@
 import requests as requests
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, session
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify, session, abort
 from flask_bootstrap import Bootstrap5
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_session import Session
@@ -333,6 +333,13 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/budget')
+def budget():
+    return render_template('budget.html')
+
+@app.route('/destinations')
+def destinations():
+    return render_template('destinations.html')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
