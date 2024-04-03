@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block extra_css %}
+
+<style>
+    /* Add your custom styles here */
+    .box {
+        width: 80%;
+        margin: 100px auto;
+        padding: 20px;
+        border: 2px solid black;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+    
+    .options {
+        display: flex;
+        justify-content: flex-start; /* Align to the left corner */
+        margin-bottom: 20px;
+    }
+    
+    .option {
+        cursor: pointer;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #ddd;
+    }
+    
+    .option.active {
+        background-color: #007bff;
+        color: #fff;
+    }
+    
+    .content {
+        display: none;
+    }
+    
+    .content.active {
+        display: block;
+    }
+    
+</style>
+{% endblock %}
+
+
+    {% block content %}
+    <div class="box">
+        <div class="options">
+            <div class="option active" id="trainOption">Train</div>
+            <div class="option" id="flightOption">Flight</div>
+        </div>
+        <div class="content active" id="trainContent">
+            <p>This is the train content.</p>
+        </div>
+        <div class="content" id="flightContent">
+            <p>This is the flight content.</p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle the toggling of options
+        const trainOption = document.getElementById('trainOption');
+        const flightOption = document.getElementById('flightOption');
+        const trainContent = document.getElementById('trainContent');
+        const flightContent = document.getElementById('flightContent');
+
+        trainOption.addEventListener('click', function() {
+            trainOption.classList.add('active');
+            flightOption.classList.remove('active');
+            trainContent.classList.add('active');
+            flightContent.classList.remove('active');
+        });
+
+        flightOption.addEventListener('click', function() {
+            flightOption.classList.add('active');
+            trainOption.classList.remove('active');
+            flightContent.classList.add('active');
+            trainContent.classList.remove('active');
+        });
+    </script>
+    
+        {% endblock %}
