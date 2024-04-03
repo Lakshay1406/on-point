@@ -1,12 +1,14 @@
 #add pip install --upgrade openai to install requirements
-import json,requests
+import json,requests,os
+from dotenv import load_dotenv
+load_dotenv()
+api_key = os.environ.get("OPENAI_API_KEY")
 UNSPLASH_ACCESS_KEY = "CVCGyPskgBwfmVDGKRF9EfKb9PqkA29lbictam9smAA"  # Set your Unsplash access key here
 # Once you add your API key below, make sure to not share it with anyone! The API key should remain private.
-OPENAI_API_KEY="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"
 from openai import OpenAI
 
 def search_destinations(start,budget):
-  client = OpenAI(api_key=OPENAI_API_KEY)
+  client = OpenAI(api_key=api_key)
 
   completion = client.chat.completions.create(
     model="gpt-3.5-turbo",
