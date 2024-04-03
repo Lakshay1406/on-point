@@ -28,7 +28,7 @@
     
     .option.active {
         background-color: #007bff;
-        color: #fff;
+        color: black;
     }
     
     .content {
@@ -37,6 +37,55 @@
     
     .content.active {
         display: block;
+    }
+
+    .flight-card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        box-shadow: 2px 2px 5px #696969;
+    }
+
+    .flight-card .card-body {
+        padding: 20px;
+    }
+
+    .flight-card .flight-info {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: larger;
+    }
+
+    .flight-card .flight-price {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: larger;
+        color: #007bff; /* Blue color for price */
+    }
+    .train-ticket {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        box-shadow: 2px 2px 5px #696969;
+    }
+
+    .train-ticket .card-body {
+        padding: 30px;
+    }
+
+    .train-ticket .train-info {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: larger;
+    }
+
+    .train-ticket .train-fare {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: larger;
+        color: #007bff; /* Blue color for fare */
+    }
+    .train-name{
+        width:fit-content;
+        width:300px;
     }
     
 </style>
@@ -49,11 +98,68 @@
             <div class="option active" id="trainOption">Train</div>
             <div class="option" id="flightOption">Flight</div>
         </div>
-        <div class="content active" id="trainContent">
-            <p>This is the train content.</p>
+        <div class="content" id="trainContent">
+            <div class="card train-ticket" >
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="train-info" style="margin-bottom:15px;">Train Number: 12345</div>
+                        </div>
+                        <div class="col">
+                            <div class="train-info train-name" >Train Name: XYZ Express</div>
+                        </div>
+                        <div class="col">
+                            <div class="train-info" >Duration: 4hrs</div>
+                        </div>
+                        <div class="col">
+                            <div class="train-info" >From: ABC</div>
+                        </div>
+                        <div class="col">
+                            <div class="train-info" >To: DEF</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="train-info" >Departure Time: 08:00 AM</div>
+                        </div>
+                        <div class="col">
+                            <div class="train-info" >Arrival Time: 12:00 PM</div>
+                        </div>
+                        <div class="col">
+                            <div class="train-info" >Class: AC Chair Car</div>
+                        </div>
+                        <div class="col">
+                            <div class="train-fare" >Fare: Rs. 1500</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        
         <div class="content" id="flightContent">
-            <p>This is the flight content.</p>
+
+            <div class="card flight-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="flight-info">Airlines:Air India </div>
+                        </div>
+                        <div class="col">
+                            <div class="flight-info">Departure:MAA</div>
+                        </div>
+                        <div class="col">
+                            <div class="flight-info">Duration: 2hrs<br><center> Stops:</center></div>
+                        </div>
+                        <div class="col">
+                            <div class="flight-info">Arrival: </div>
+                        </div>
+                        <div class="col">
+                            <div class="flight-price">Price: Rs.10,000<br><center>Per Adult</center></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
