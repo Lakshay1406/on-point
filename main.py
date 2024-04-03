@@ -292,5 +292,9 @@ def logout():
 def budget():
     return render_template('budget.html')
 
+@app.route('/destinations')
+def destinations():
+    return render_template('destinations.html')
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
