@@ -4,13 +4,13 @@ import requests
 
 ## calc_lat_long will calculate the latitude and longitude of the given address and nearby airport
 ## return from_lat, from_long , to_lat ,to_long
-def calc_lat_long(add):
+def calc_lat_long(add,api_key):
     url = "https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi"
 
     querystring = {"address": add}
 
     headers = {
-        "X-RapidAPI-Key": '3813f5e554msheaa31e90e985c7ep116172jsn0ce5a97bccf5',
+        "X-RapidAPI-Key": api_key,
         "X-RapidAPI-Host": "address-from-to-latitude-longitude.p.rapidapi.com"
     }
 

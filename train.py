@@ -35,7 +35,12 @@ def get_tickets_from_stcode(start,end,date,rapid_api_key):
     j=0
     l=[]
     train_details={}
-    while i>0 and j<=3:
+    while i>0 and j<3:
+        if data[j]["special_train"]==True:
+            i -= 1
+            j += 1
+            continue
+
         train_details["train_number"]=data[j]["train_number"]
         train_details["train_name"] = data[j]["train_name"]
         train_details["duration"] = data[j]["duration"]
@@ -58,6 +63,12 @@ def get_tickets_from_stcode(start,end,date,rapid_api_key):
 
         sss = requests.get(url, headers=headers, params=querystring)
         print(sss.json())
+        if sss.json()['data']["general"]==[]:
+            i -= 1
+            j += 1
+            train_details = {}
+            continue
+
         d=sss.json()['data']["general"][0]
         train_details["class"]=d["classType"]
         train_details["fare"]=d["fare"]
@@ -70,10 +81,11 @@ def get_tickets_from_stcode(start,end,date,rapid_api_key):
         j+=1
     print()
     print(l)
+    return l
 
-start='MAS'
-end='SBC'
-date='2024-04-03'
-rapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'
-get_tickets_from_stcode(start,end,date,rapid_api_key)
+# start='MAS'
+# end='SBC'
+# date='2024-04-03'
+# rapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'
+# get_tickets_from_stcode(start,end,date,rapid_api_key)
 

@@ -13,8 +13,10 @@ from functools import wraps
 from http import HTTPStatus
 from datetime import datetime
 from amadeus import Client, ResponseError
-from OpenAI_API_script import search_destinations
+from OpenAI_API_script import search_destinations, find_nearest_station, find_nearest_airport
+from train import get_tickets_from_stcode
 
+TEST_MODE = False
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8Badawdawdb'
 bootstrap = Bootstrap5(app)
@@ -29,8 +31,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy()
 db.init_app(app)
 
+#API_keys
+rapid_api_key_for_train = 'ed61e1e291msh3180b8a78efa8bep16aeeajsn136814a859fa'
+rapid_api_key_for_lat_long='3813f5e554msheaa31e90e985c7ep116172jsn0ce5a97bccf5'
+# also check usage on openAPI
 
-rapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'
 
 # CONFIGURE TABLES
 class User(db.Model, UserMixin):
@@ -50,14 +55,12 @@ class Train(db.Model, UserMixin):
     st_name = db.Column(db.String(100))
     place = db.Column(db.String(100))
 
+
 class Api(db.Model, UserMixin):
     __tablename__ = "api"
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(50), unique=True)
     count = db.Column(db.Integer)
-
-
-
 
 
 # Create a user_loader callback
@@ -102,7 +105,7 @@ def abcd():
     adult = session["adult"]
     print(start_add, end_add, indate, adult)
 
-    start_calc = calc_lat_long(start_add)
+    start_calc = calc_lat_long(start_add,rapid_api_key_for_lat_long)
 
     ##coordinates saved in session
     session["st_from_lat"] = start_calc["from_lat"]
@@ -121,7 +124,7 @@ def abcd():
     start_cab_time = int((start_calc["dist"] / 30) * 60)
 
     ## end_location
-    end_calc = calc_lat_long(end_add)
+    end_calc = calc_lat_long(end_add,rapid_api_key_for_lat_long)
     ##coordinates saved in session
     session["ed_from_lat"] = end_calc["from_lat"]
     session["ed_from_long"] = end_calc["from_long"]
@@ -198,7 +201,7 @@ def register():
         result = db.session.execute(db.select(User).where(User.email == email))
         user = result.scalar()
         if user:
-            flash('Email already exists.Try logging in instead. ')
+            flash('Email already exists.Try logging in instead.')
             return redirect(url_for('login'))
         new_user = User(
             email=request.form.get('email'),
@@ -293,26 +296,24 @@ def login():
             return render_template("login.html")
     return render_template("login.html")
 
+
 # @app.route('/train', methods=["GET", "POST"])
 # def train():
-    # start= "Off, Old Mahabalipuram Road, Kamaraj Nagar, Semmancheri, Chennai, Tamil Nadu 600119"
-    # end="Kasturba Rd, behind High Court of Karnataka, Ambedkar Veedhi, Sampangi Rama Nagara, Bengaluru, Karnataka 560001"
-    # begin = get_city_from_address(start,rapid_api_key)
-    # print(begin)
-    # to = get_city_from_address(end,rapid_api_key)
-    # result = db.session.execute(db.select(Train).where(Train.place == begin))
-    # user = result.scalar()
-    # print(user.code)
-    #
-    # start='MAS'
-    # end='SBC'
-    # date='2024-04-03'
-    # get_tickets_from_stcode(start,end,date,rapid_api_key)
-
-
-
-
-    # return redirect(url_for('home'))
+#     # start= "Off, Old Mahabalipuram Road, Kamaraj Nagar, Semmancheri, Chennai, Tamil Nadu 600119"
+#     # end="Kasturba Rd, behind High Court of Karnataka, Ambedkar Veedhi, Sampangi Rama Nagara, Bengaluru, Karnataka 560001"
+#     begin = find_nearest_station(start)
+#     print(begin)
+#     to = find_nearest_station(end)
+#     print(to)
+#
+#
+#     date='2024-04-03'
+#     l=get_tickets_from_stcode(begin,to,date,rapid_api_key_for_train)
+#
+#
+#
+#
+#     return redirect(url_for('home'))
 
 
 @app.route('/aboutus')
@@ -320,11 +321,9 @@ def aboutus():
     return render_template('aboutus.html')
 
 
-
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
-
 
 
 @app.route('/logout')
@@ -333,21 +332,155 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+
 @app.route('/budget')
 def budget():
     return render_template('budget.html')
 
-@app.route('/destinations')
+
+@app.route('/destinations', methods=["GET", "POST"])
 def destinations():
-    city="chennai"
-    amount="10000"
-    destinations=search_destinations(city,amount)
+    address = session['budget_start_add']
+    budget = session['budget_budget']
+    date = session['budget_date']
+    print(address, budget, date)
+    destinations = search_destinations(address + ' ' + budget)
     print(destinations)
-    return render_template('destinations.html',destinations=destinations)
+    return render_template('destinations.html', destinations=destinations)
+
+
+
+@app.route("/loading_locations", methods=["POST"])###loading nearby destinations
+def loading_locations():
+    if request.method == "POST":
+        session['budget_start_add']=request.form.get('address')
+        session['budget_budget']=request.form.get('budget')
+        session['budget_date']=request.form.get('date')
+        return render_template("loading_locations.html")
+
+@app.route("/loading_destination")### for long load after selecting city
+def loading_destination():
+    session['budget_city'] = request.args.get('city')
+    print(session['budget_city'])
+    return render_template("loading_destination.html")
+
 
 @app.route('/details')
 def details():
-    return render_template('details.html')
+    city = session['budget_city']
+    print("got" + city)
+    if TEST_MODE == True:
+        ## details for chennai to kodaikanal for budget 50000
+        train_details = [
+            {'train_number': '20665', 'train_name': 'Vande Bharat Express', 'duration': '5:40', 'from': 'MS',
+             'to': 'MDU', 'departure_time': '14:50', 'arrival_time': '20:30', 'from_station_name': 'CHENNAI EGMORE',
+             'to_station_name': 'MADURAI JN', 'class': 'CC', 'fare': 1005},
+            {'train_number': '16101', 'train_name': 'Chennai Egmore - Kollam Express', 'duration': '7:10', 'from': 'MS',
+             'to': 'MDU', 'departure_time': '17:00', 'arrival_time': '00:10', 'from_station_name': 'CHENNAI EGMORE',
+             'to_station_name': 'MADURAI JN', 'class': '3A', 'fare': 790},
+            {'train_number': '12661', 'train_name': 'Pothigai SF Express', 'duration': '7:25', 'from': 'MS',
+             'to': 'MDU', 'departure_time': '20:40', 'arrival_time': '04:05', 'from_station_name': 'CHENNAI EGMORE',
+             'to_station_name': 'MADURAI JN', 'class': '1A', 'fare': 1960}]
+        start_iata = 'MAA'
+        end_iata = 'CJB'
+        start_air = 'Chennai International Airport'
+        end_air = 'Coimbatore International Airport'
+        flights = [['1H10M', '13:20', '14:30', 'AIR INDIA', 0, '5,587'],
+                   ['6H55M', '07:00', '13:55', 'VISTARA', 1, '11,367'],
+                   ['17H25M', '20:30', '13:55', 'VISTARA', 1, '11,367'],
+                   ['25H25M', '12:30', '13:55', 'VISTARA', 1, '12,078']]
+
+        return render_template('details.html', train_details=train_details, start_iata=start_iata, end_iata=end_iata,
+                               start_air=start_air, end_air=end_air, flights=flights)
+
+    ### calculating possible train routes
+    begin = find_nearest_station(session['budget_start_add'])
+    print(begin)
+    to = find_nearest_station(city)
+    print(to)
+    date = session['budget_date']
+    if to == None:
+        train_details = []
+    else:
+        train_details = get_tickets_from_stcode(begin, to, date, rapid_api_key_for_train)
+
+    #### calculating possible flight routes
+
+    # calculating IATA code and name
+    data1 = find_nearest_airport(session['budget_start_add'])
+    start_iata = data1['IATA-code']
+    start_air = data1['airport name']
+
+    data2 = find_nearest_airport(city)
+    end_iata = data2['IATA-code']
+    end_air = data2['airport name']
+    print(start_iata, end_iata)
+    '''start_calc = calc_lat_long(session['budget_start_add'], rapid_api_key_for_lat_long)
+    start_iata=start_calc["airport_code"]
+    start_air=start_calc["airport_name"]
+
+    end_calc = calc_lat_long(city, rapid_api_key_for_lat_long)
+    end_iata = end_calc["airport_code"]
+    end_air = end_calc["airport_name"]
+    print(start_iata, end_iata)'''
+    if start_iata==end_iata:
+        flights = []
+        return render_template('details.html', train_details=train_details, start_iata=start_iata, end_iata=end_iata,
+                               start_air=start_air, end_air=end_air, flights=flights)
+    # flight offer search api calling and getting required values
+
+    amadeus = Client(
+        client_id='7KUpum4cjVAHkMvdn0GR0nbrIzYFGHd0',
+        client_secret='n8ZUaNGtyIDRwuBY'
+    )
+    try:
+        response = amadeus.shopping.flight_offers_search.get(
+            originLocationCode=start_iata,
+            destinationLocationCode=end_iata,
+            departureDate=date,
+            adults=1,
+            currencyCode='INR',
+            max=4,
+
+        )
+        l = response.data
+        print(l)
+        flights = []
+        for i in l:
+            flg = []
+            n = len(i["itineraries"][0]["segments"]) - 1
+            flg.append(i["itineraries"][0]["duration"].lstrip('PT'))
+            flg.append((i["itineraries"][0]["segments"][0]["departure"]["at"].split('T'))[1][:-3])
+            flg.append((i["itineraries"][0]["segments"][n]["arrival"]["at"].split('T'))[1][:-3])
+
+            code = i["itineraries"][0]["segments"][0]["carrierCode"]
+            if code != 'FZ':
+                url = "https://aviation-reference-data.p.rapidapi.com/airline/" + code
+
+                headers = {
+                    "X-RapidAPI-Key": "3813f5e554msheaa31e90e985c7ep116172jsn0ce5a97bccf5",
+                    "X-RapidAPI-Host": "aviation-reference-data.p.rapidapi.com"
+                }
+
+                response = requests.get(url, headers=headers)
+
+                flg.append(response.json()['name'])
+            else:
+                flg.append("FlyDubai")
+            flg.append(n)
+            price = i["price"]["total"][:-3]
+            s, *d = str(price).partition(".")
+            r = ",".join([s[x - 2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])
+            price = "".join([r] + d)
+            flg.append(price)
+            flights.append(flg)
+            print(flg)
+    except ResponseError as error:
+        print(error)
+    print("successfully processed details")
+    return render_template('details.html', train_details=train_details, start_iata=start_iata, end_iata=end_iata,
+                           start_air=start_air, end_air=end_air, flights=flights)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

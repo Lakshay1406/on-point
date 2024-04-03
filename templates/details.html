@@ -99,66 +99,77 @@
             <div class="option" id="flightOption">Flight</div>
         </div>
         <div class="content" id="trainContent">
+            {% if train_details==[]%}
+            <p>No trains found.</p>
+            {% else %}
+            {% for train in train_details %}
             <div class="card train-ticket" >
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <div class="train-info" style="margin-bottom:15px;">Train Number: 12345</div>
+                            <div class="train-info" style="margin-bottom:15px;">Train Number: {{train['train_number']}}</div>
                         </div>
                         <div class="col">
-                            <div class="train-info train-name" >Train Name: XYZ Express</div>
+                            <div class="train-info train-name" >Train Name: {{train['train_name']}}</div>
                         </div>
                         <div class="col">
-                            <div class="train-info" >Duration: 4hrs</div>
+                            <div class="train-info" >Duration: {{train['duration']}}hrs</div>
                         </div>
                         <div class="col">
-                            <div class="train-info" >From: ABC</div>
+                            <div class="train-info" >From: {{train['from_station_name']}}</div>
                         </div>
                         <div class="col">
-                            <div class="train-info" >To: DEF</div>
+                            <div class="train-info" >To: {{train['to_station_name']}}</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="train-info" >Departure Time: 08:00 AM</div>
+                            <div class="train-info" >Departure Time: {{train['departure_time']}}</div>
                         </div>
                         <div class="col">
-                            <div class="train-info" >Arrival Time: 12:00 PM</div>
+                            <div class="train-info" >Arrival Time: {{train['arrival_time']}}</div>
                         </div>
                         <div class="col">
-                            <div class="train-info" >Class: AC Chair Car</div>
+                            <div class="train-info" >Class: {{train['class']}}</div>
                         </div>
                         <div class="col">
-                            <div class="train-fare" >Fare: Rs. 1500</div>
+                            <div class="train-fare" >Fare: Rs.{{train['fare']}}</div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
+            {% endif %}
         </div>
         
         <div class="content" id="flightContent">
-
+            {% if flights==[]%}
+            <p>No flights found.</p>
+            {% else %}
+            {% for flight in flights %}
             <div class="card flight-card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <div class="flight-info">Airlines:Air India </div>
+                            <div class="flight-info">Airlines:{{flight[3]}} </div>
                         </div>
                         <div class="col">
-                            <div class="flight-info">Departure:MAA</div>
+                            <div class="flight-info">Departure:{{start_air}}<br> Time:{{flight[1]}}</div>
                         </div>
                         <div class="col">
-                            <div class="flight-info">Duration: 2hrs<br><center> Stops:</center></div>
+                            <div class="flight-info">Duration: {{flight[0]}}<br><center> Stops:{{flight[4]}}</center></div>
                         </div>
                         <div class="col">
-                            <div class="flight-info">Arrival: </div>
+                            <div class="flight-info">Arrival:{{end_air}}<br> Time:{{flight[2]}} </div>
                         </div>
                         <div class="col">
-                            <div class="flight-price">Price: Rs.10,000<br><center>Per Adult</center></div>
+                            <div class="flight-price">Price: Rs.{{flight[5]}}<br><center>Per Adult</center></div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
+            {% endif %}
 
         </div>
     </div>

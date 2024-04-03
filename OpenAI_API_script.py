@@ -7,7 +7,7 @@ UNSPLASH_ACCESS_KEY = "CVCGyPskgBwfmVDGKRF9EfKb9PqkA29lbictam9smAA"  # Set your 
 # Once you add your API key below, make sure to not share it with anyone! The API key should remain private.
 from openai import OpenAI
 
-def search_destinations(start,budget):
+def search_destinations(query):
   client = OpenAI(api_key=api_key)
 
   completion = client.chat.completions.create(
@@ -15,7 +15,7 @@ def search_destinations(start,budget):
     response_format={"type":"json_object"},
     messages=[
       {"role": "system", "content": "start fresh.i want the output to be in valid json format the national and international destinations(if applicable) which are under the budget given in rupees by the user and the starting location which is given by user and message to tell any problem occurred or successful . show give me best locations to visit for national and 5 for international if possible no need of descriptions where i can travel with that budget. , all locations should be different from each other, and around india and under budget.if budget is huge then international travel destinations can also be recommended.constraint if budget is less than 8000 then get places within 500km from starting location.if budget is between 8k and 16k then expand to 1000km incremend 500km for every 8k increase in budget.if no international destinations found there should still be a JSON key of int_dest with empty list.the keys in JSON shd be nat_dest,int_dest,message."},
-      {"role": "user", "content": start+' '+budget}
+      {"role": "user", "content": query}
     ]
   )
 
@@ -47,4 +47,36 @@ def search_destinations(start,budget):
   return file
 
 
+def find_nearest_station(address):
+  client = OpenAI(api_key=api_key)
 
+  completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    response_format={"type": "json_object"},
+    messages=[
+      {"role": "system","content": "return json containing key train station code only for the nearest major train station for the given address.if international address given return train station code is None"},
+      {"role": "user", "content": address}
+    ]
+  )
+
+  data = json.loads(completion.choices[0].message.content)
+  print(data)
+  return(data['train_station_code'])
+
+
+def find_nearest_airport(address):
+  client = OpenAI(api_key=api_key)
+
+  completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    response_format={"type": "json_object"},
+    messages=[
+      {"role": "system","content": "return json containing keys IATA-code and airport name.find the airport only for the nearest major airport for the given address"},
+      {"role": "user", "content": address}
+    ]
+  )
+
+  data = json.loads(completion.choices[0].message.content)
+  print(data)
+  return(data)
+#find_nearest_airport("Off, Old Mahabalipuram Road, Kamaraj Nagar, Semmancheri, Chennai, Tamil Nadu 600119")

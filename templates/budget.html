@@ -88,11 +88,11 @@
 {% block content %}
     <center>
         <div id="container" class="blurred-background" >
-            <form id="searchelements" method="post" action="{{url_for('loading')}}">
+            <form id="searchelements" method="post" action="{{url_for('loading_locations')}}">
                 <center><h1>Plan Your Trip</h1></center>
                 <div id="frombox" >
                 <label for="from">Starting point</label><br>
-                <input id="from" name="start" type="text" placeholder="Enter the starting location" required >
+                <input id="from" name="address" type="text" placeholder="Enter the starting location" required >
                 </div>
                 <div id="budget">
                     <label for="budget">Budget(in rupees)</label><br>
@@ -100,12 +100,9 @@
                 </div>
                 <div id="departurebox">
                     <label for="departure">Departure date</label><br>
-                    <input id="departure" name="departure" type="date"  placeholder="Departure date" required>
+                    <input id="departure" name="date" type="date"  placeholder="Departure date" required>
                 </div>
-                <div id="adultcountbox">
-                    <label for="adultcount">No. of Adults</label><br>
-                    <input id="adultcount" name="adult" type="number"  min="1" required placeholder="Enter the no. of Adults" value="1">
-                </div>
+
                 <center><input class="btn btn-primary" type="submit" value="SUBMIT" id="Submit"></center>
             </form>
 
