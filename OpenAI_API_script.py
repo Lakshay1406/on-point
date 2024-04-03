@@ -2,7 +2,7 @@
 import json,requests
 UNSPLASH_ACCESS_KEY = "CVCGyPskgBwfmVDGKRF9EfKb9PqkA29lbictam9smAA"  # Set your Unsplash access key here
 # Once you add your API key below, make sure to not share it with anyone! The API key should remain private.
-OPENAI_API_KEY="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"
+OPENAI_API_KEY="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"
 from openai import OpenAI
 
 def search_destinations(start,budget):
@@ -21,8 +21,10 @@ def search_destinations(start,budget):
   print(data)
   destinations=data["nat_dest"]+data['int_dest']
 
-  images=[]
+  file=[]
+  with_image=[]
   for i in destinations:
+    with_image+=[i]
     try:
       # Fetch photo of the city from Unsplash
       response = requests.get(
@@ -35,10 +37,12 @@ def search_destinations(start,budget):
       # Extract image URL and user information from the response
       photo = data["results"][0]
       image_urls = photo["urls"]["regular"]
-      images+=[image_urls]
+      with_image+=[image_urls]
     except Exception as e:
-      images+=["https://source.unsplash.com/600x900/?tech,street"]
-  return destinations, images
+      with_image+=["https://source.unsplash.com/600x900/?tech,street"]
+    file+=[with_image]
+    with_image=[]
+  return file
 
 
 

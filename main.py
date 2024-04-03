@@ -339,7 +339,11 @@ def budget():
 
 @app.route('/destinations')
 def destinations():
-    return render_template('destinations.html')
+    city="chennai"
+    amount="10000"
+    destinations=search_destinations(city,amount)
+    print(destinations)
+    return render_template('destinations.html',destinations=destinations)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
