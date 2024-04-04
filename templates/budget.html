@@ -8,13 +8,12 @@
             background-repeat:no-repeat;
             background-position:center;
         }
-        .blurred-background {
-            backdrop-filter: blur(5px); /* Apply blur effect */
-            padding: 20px; /* Adjust padding as needed */
-            width: fit-content; /* Set a specific width */
-            margin: auto; /* Center the div horizontally */
-            border-radius: 15px; /* Optional: Add rounded corners */
+        .blurred-background{
+            background-color:white;
+            border-radius:10px;
+            height:fit-content;
         }
+
         
         label{
             font-size: 17px;
@@ -72,10 +71,12 @@
         
         label{
             text-align:left;
+            padding-top:10px;
         }
         h1{
             font-family:Verdana, Geneva, Tahoma, sans-serif;
             /* margin-bottom:20px; */
+            padding-top:10px;
         }
         #Submit:hover{
             background-color: #DE3163;
@@ -91,20 +92,16 @@
             <form id="searchelements" method="post" action="{{url_for('loading')}}">
                 <center><h1>Plan Your Trip</h1></center>
                 <div id="frombox" >
-                <label for="from">Starting point</label><br>
+                <label for="from" style="padding-top:10px;">Starting point</label><br>
                 <input id="from" name="start" type="text" placeholder="Enter the starting location" required >
                 </div>
-                <div id="budget">
+                <div id="budget" style="padding-top:10px;">
                     <label for="budget">Budget(in rupees)</label><br>
                     <input type="number" id="budget"name="budget" placeholder="Please enter the budget for the trip" required min="1000">
                 </div>
-                <div id="departurebox">
+                <div id="departurebox" style="padding-top:10px;">
                     <label for="departure">Departure date</label><br>
                     <input id="departure" name="departure" type="date"  placeholder="Departure date" required>
-                </div>
-                <div id="adultcountbox">
-                    <label for="adultcount">No. of Adults</label><br>
-                    <input id="adultcount" name="adult" type="number"  min="1" required placeholder="Enter the no. of Adults" value="1">
                 </div>
                 <center><input class="btn btn-primary" type="submit" value="SUBMIT" id="Submit"></center>
             </form>
