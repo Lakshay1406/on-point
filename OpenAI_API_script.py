@@ -2,7 +2,7 @@
 import json,requests,os
 from dotenv import load_dotenv
 load_dotenv()
-api_key = os.environ.get("OPENAI_API_KEY")
+api_key = "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"
 UNSPLASH_ACCESS_KEY = "CVCGyPskgBwfmVDGKRF9EfKb9PqkA29lbictam9smAA"  # Set your Unsplash access key here
 # Once you add your API key below, make sure to not share it with anyone! The API key should remain private.
 from openai import OpenAI
