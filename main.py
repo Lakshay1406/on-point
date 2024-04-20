@@ -15,10 +15,12 @@ from datetime import datetime
 from amadeus import Client, ResponseError
 from OpenAI_API_script import search_destinations, find_nearest_station, find_nearest_airport
 from train import get_tickets_from_stcode
+from dotenv import load_dotenv
+load_dotenv()
 
-TEST_MODE = False
+TEST_MODE = True
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8Badawdawdb'
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 bootstrap = Bootstrap5(app)
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -345,7 +347,7 @@ def destinations():
     date = session['budget_date']
     print(address, budget, date)
     destinations = search_destinations(address + ' ' + budget)
-    print(destinations)
+    # print(destinations)
     return render_template('destinations.html', destinations=destinations)
 
 
@@ -413,7 +415,11 @@ def details():
 
     data2 = find_nearest_airport(city)
     end_iata = data2['IATA-code']
-    end_air = data2['airport name']
+    try:
+        end_air = data2['airport name']
+    except:
+        end_air = data2['Airport name']
+
     print(start_iata, end_iata)
     '''start_calc = calc_lat_long(session['budget_start_add'], rapid_api_key_for_lat_long)
     start_iata=start_calc["airport_code"]

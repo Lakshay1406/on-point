@@ -1,0 +1,139 @@
+Index: train.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import requests\r\n\r\ndef get_city_from_address(address,rapid_api_key):\r\n\r\n\r\n    url = \"https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi\"\r\n\r\n    querystring = {\"address\": address}\r\n\r\n    headers = {\r\n        \"X-RapidAPI-Key\": rapid_api_key,\r\n        \"X-RapidAPI-Host\": \"address-from-to-latitude-longitude.p.rapidapi.com\"\r\n    }\r\n\r\n    response = requests.get(url, headers=headers, params=querystring)\r\n\r\n    return(response.json()['Results'][0]['city'])\r\n\r\ndef get_tickets_from_stcode(start,end,date,rapid_api_key):\r\n\r\n\r\n    url = \"https://irctc1.p.rapidapi.com/api/v3/trainBetweenStations\"\r\n\r\n    querystring = {\"fromStationCode\": start, \"toStationCode\": end, \"dateOfJourney\": date}\r\n\r\n    headers = {\r\n        \"X-RapidAPI-Key\": rapid_api_key,\r\n        \"X-RapidAPI-Host\": \"irctc1.p.rapidapi.com\"\r\n    }\r\n\r\n    response = requests.get(url, headers=headers, params=querystring)\r\n    print(response.json())\r\n    data=response.json()['data']\r\n    i=len(data)\r\n    j=0\r\n    l=[]\r\n    train_details={}\r\n    while i>0 and j<=3:\r\n        train_details[\"train_number\"]=data[j][\"train_number\"]\r\n        train_details[\"train_name\"] = data[j][\"train_name\"]\r\n        train_details[\"duration\"] = data[j][\"duration\"]\r\n        train_details[\"from\"] = data[j][\"from\"]\r\n        train_details[\"to\"] = data[j][\"to\"]\r\n        train_details[\"departure_time\"] = data[j][\"from_sta\"]\r\n        train_details[\"arrival_time\"] = data[j][\"to_sta\"]\r\n        train_details[\"from_station_name\"] = data[j][\"from_station_name\"]\r\n        train_details[\"to_station_name\"] = data[j][\"to_station_name\"]\r\n\r\n\r\n        url = \"https://irctc1.p.rapidapi.com/api/v2/getFare\"\r\n\r\n        querystring = {\"trainNo\": train_details[\"train_number\"], \"fromStationCode\": train_details[\"from\"], \"toStationCode\": train_details[\"to\"]}\r\n\r\n        headers = {\r\n            \"X-RapidAPI-Key\": rapid_api_key,\r\n            \"X-RapidAPI-Host\": \"irctc1.p.rapidapi.com\"\r\n        }\r\n\r\n        sss = requests.get(url, headers=headers, params=querystring)\r\n        print(sss.json())\r\n        d=sss.json()['data'][\"general\"][0]\r\n        train_details[\"class\"]=d[\"classType\"]\r\n        train_details[\"fare\"]=d[\"fare\"]\r\n\r\n\r\n        l+=[train_details]\r\n\r\n        train_details = {}\r\n        i-=1\r\n        j+=1\r\n    print()\r\n    print(l)\r\n\r\nstart='MAS'\r\nend='SBC'\r\ndate='2024-04-03'\r\nrapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'\r\nget_tickets_from_stcode(start,end,date,rapid_api_key)\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/train.py b/train.py
+--- a/train.py	(revision 79b5f2530a00cad8d7e20b59ea333663dc9ce98f)
++++ b/train.py	(date 1712132568333)
+@@ -70,10 +70,11 @@
+         j+=1
+     print()
+     print(l)
++    return l
+ 
+-start='MAS'
+-end='SBC'
+-date='2024-04-03'
+-rapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'
+-get_tickets_from_stcode(start,end,date,rapid_api_key)
++# start='MAS'
++# end='SBC'
++# date='2024-04-03'
++# rapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'
++# get_tickets_from_stcode(start,end,date,rapid_api_key)
+ 
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import requests as requests\r\nfrom flask import Flask, render_template, redirect, url_for, flash, request, jsonify, session, abort\r\nfrom flask_bootstrap import Bootstrap5\r\nfrom flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required\r\nfrom flask_session import Session\r\nfrom flask_sqlalchemy import SQLAlchemy\r\nfrom werkzeug.security import generate_password_hash, check_password_hash\r\nfrom api import calc_lat_long\r\n# from train import get_city_from_address,get_tickets_from_stcode\r\nfrom werkzeug.utils import secure_filename\r\nimport os\r\nfrom functools import wraps\r\nfrom http import HTTPStatus\r\nfrom datetime import datetime\r\nfrom amadeus import Client, ResponseError\r\nfrom OpenAI_API_script import search_destinations\r\n\r\napp = Flask(__name__)\r\napp.config['SECRET_KEY'] = '8Badawdawdb'\r\nbootstrap = Bootstrap5(app)\r\napp.config[\"SESSION_TYPE\"] = \"filesystem\"\r\nSession(app)\r\n\r\nlogin_manager = LoginManager()\r\nlogin_manager.init_app(app)\r\n\r\n# CONNECT TO DB\r\napp.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'\r\ndb = SQLAlchemy()\r\ndb.init_app(app)\r\n\r\n\r\nrapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'\r\n\r\n# CONFIGURE TABLES\r\nclass User(db.Model, UserMixin):\r\n    __tablename__ = \"user\"\r\n    id = db.Column(db.Integer, primary_key=True)\r\n    email = db.Column(db.String(100), unique=True)\r\n    password = db.Column(db.String(100))\r\n    name = db.Column(db.String(100))\r\n    age = db.Column(db.Integer)\r\n    phone_no = db.Column(db.Integer)\r\n\r\n\r\nclass Train(db.Model, UserMixin):\r\n    __tablename__ = \"train\"\r\n    id = db.Column(db.Integer, primary_key=True)\r\n    code = db.Column(db.String(10), unique=True)\r\n    st_name = db.Column(db.String(100))\r\n    place = db.Column(db.String(100))\r\n\r\nclass Api(db.Model, UserMixin):\r\n    __tablename__ = \"api\"\r\n    id = db.Column(db.Integer, primary_key=True)\r\n    code = db.Column(db.String(50), unique=True)\r\n    count = db.Column(db.Integer)\r\n\r\n\r\n\r\n\r\n\r\n# Create a user_loader callback\r\n@login_manager.user_loader\r\ndef load_user(user_id):\r\n    return db.get_or_404(User, user_id)\r\n\r\n\r\n@login_manager.unauthorized_handler\r\ndef unauthorized():\r\n    if request.blueprint == 'api':\r\n        abort(HTTPStatus.UNAUTHORIZED)\r\n    flash('login / signup is required')\r\n    return redirect(url_for('login'))\r\n\r\n\r\nwith app.app_context():\r\n    db.create_all()\r\n\r\n\r\n@app.route(\"/\")\r\ndef home():\r\n    return render_template('index.html')\r\n\r\n\r\n@app.route(\"/loading\", methods=[\"POST\"])\r\ndef loading():\r\n    if request.method == \"POST\":\r\n        # We'll use a session object to save the data sent by the user for processing\r\n        session[\"start_add\"] = request.form.get(\"start\")\r\n        session[\"end_add\"] = request.form.get('end')\r\n        session[\"indate\"] = request.form.get('in-date')\r\n        session[\"adult\"] = request.form.get('adult')\r\n        return render_template(\"loading.html\")\r\n\r\n\r\n@app.route('/abcd', methods=[\"GET\", \"POST\"])\r\ndef abcd():\r\n    start_add = session[\"start_add\"]\r\n    end_add = session[\"end_add\"]\r\n    indate = session[\"indate\"]\r\n    adult = session[\"adult\"]\r\n    print(start_add, end_add, indate, adult)\r\n\r\n    start_calc = calc_lat_long(start_add)\r\n\r\n    ##coordinates saved in session\r\n    session[\"st_from_lat\"] = start_calc[\"from_lat\"]\r\n    session[\"st_from_long\"] = start_calc[\"from_long\"]\r\n    session[\"st_to_lat\"] = start_calc[\"to_lat\"]\r\n    session[\"st_to_long\"] = start_calc[\"to_long\"]\r\n\r\n    # converting to IATA code for flight search\r\n    start = start_calc[\"airport_code\"]\r\n    start_air = start_calc[\"airport_name\"].capitalize()\r\n    session[\"start_air\"] = start_air\r\n\r\n    ## assuming cab fare to be rs 15 per km\r\n    ## assuming cab travels at 30km/hr\r\n    start_fare = start_calc[\"dist\"] * 15\r\n    start_cab_time = int((start_calc[\"dist\"] / 30) * 60)\r\n\r\n    ## end_location\r\n    end_calc = calc_lat_long(end_add)\r\n    ##coordinates saved in session\r\n    session[\"ed_from_lat\"] = end_calc[\"from_lat\"]\r\n    session[\"ed_from_long\"] = end_calc[\"from_long\"]\r\n    session[\"ed_to_lat\"] = end_calc[\"to_lat\"]\r\n    session[\"ed_to_long\"] = end_calc[\"to_long\"]\r\n\r\n    end = end_calc[\"airport_code\"]\r\n    end_air = end_calc[\"airport_name\"].capitalize()\r\n    session[\"end_air\"] = end_air\r\n    end_fare = end_calc[\"dist\"] * 15\r\n    end_cab_time = int((end_calc[\"dist\"] / 30) * 60)\r\n    print(start, end, start_calc[\"dist\"], end_calc[\"dist\"])\r\n\r\n    # flight offer search api calling and getting required values\r\n\r\n    amadeus = Client(\r\n        client_id='7KUpum4cjVAHkMvdn0GR0nbrIzYFGHd0',\r\n        client_secret='n8ZUaNGtyIDRwuBY'\r\n    )\r\n    try:\r\n        response = amadeus.shopping.flight_offers_search.get(\r\n            originLocationCode=start,\r\n            destinationLocationCode=end,\r\n            departureDate=indate,\r\n            adults=adult,\r\n            currencyCode='INR',\r\n            max=4,\r\n\r\n        )\r\n        l = response.data\r\n        print(l)\r\n        flights = []\r\n        for i in l:\r\n            flg = []\r\n            n = len(i[\"itineraries\"][0][\"segments\"]) - 1\r\n            flg.append(i[\"itineraries\"][0][\"duration\"].lstrip('PT'))\r\n            flg.append((i[\"itineraries\"][0][\"segments\"][0][\"departure\"][\"at\"].split('T'))[1][:-3])\r\n            flg.append((i[\"itineraries\"][0][\"segments\"][n][\"arrival\"][\"at\"].split('T'))[1][:-3])\r\n\r\n            code = i[\"itineraries\"][0][\"segments\"][0][\"carrierCode\"]\r\n            if code != 'FZ':\r\n                url = \"https://aviation-reference-data.p.rapidapi.com/airline/\" + code\r\n\r\n                headers = {\r\n                    \"X-RapidAPI-Key\": \"3813f5e554msheaa31e90e985c7ep116172jsn0ce5a97bccf5\",\r\n                    \"X-RapidAPI-Host\": \"aviation-reference-data.p.rapidapi.com\"\r\n                }\r\n\r\n                response = requests.get(url, headers=headers)\r\n\r\n                flg.append(response.json()['name'])\r\n            else:\r\n                flg.append(\"FlyDubai\")\r\n            flg.append(n)\r\n            price = i[\"price\"][\"total\"][:-3]\r\n            s, *d = str(price).partition(\".\")\r\n            r = \",\".join([s[x - 2:x] for x in range(-3, -len(s), -2)][::-1] + [s[-3:]])\r\n            price = \"\".join([r] + d)\r\n            flg.append(price)\r\n            flights.append(flg)\r\n            print(flg)\r\n        return render_template('abcd.html', start_cab_time=start_cab_time, end_cab_time=end_cab_time,\r\n                               start_fare=start_fare, end_fare=end_fare, start_add=start_add, end_add=end_add,\r\n                               start_air=start_air, end_air=end_air, flights=flights)\r\n    except ResponseError as error:\r\n        print(error)\r\n\r\n\r\n@app.route('/register', methods=[\"GET\", \"POST\"])\r\ndef register():\r\n    if request.method == \"POST\":\r\n        genpassword = generate_password_hash(request.form[\"password\"], method='pbkdf2:sha256', salt_length=8)\r\n        email = request.form.get('email')\r\n        result = db.session.execute(db.select(User).where(User.email == email))\r\n        user = result.scalar()\r\n        if user:\r\n            flash('Email already exists.Try logging in instead. ')\r\n            return redirect(url_for('login'))\r\n        new_user = User(\r\n            email=request.form.get('email'),\r\n            name=request.form.get('name'),\r\n            password=genpassword,\r\n            age=request.form.get('age'),\r\n            phone_no=request.form.get('phone_no')\r\n        )\r\n        db.session.add(new_user)\r\n        db.session.commit()\r\n\r\n        login_user(new_user)\r\n\r\n        return redirect(url_for(\"plan\"))\r\n    return render_template(\"register.html\")\r\n\r\n\r\n@app.route('/map', methods=[\"GET\", \"POST\"])\r\ndef map():\r\n    num = int(request.args.get('id'))\r\n    print(num)\r\n    if num == 1:\r\n        start_add = session[\"start_add\"]\r\n        end_add = session[\"start_air\"]\r\n        from_lat = session[\"st_from_lat\"]\r\n        from_long = session[\"st_from_long\"]\r\n        to_lat = session[\"st_to_lat\"]\r\n        to_long = session[\"st_to_long\"]\r\n    elif num == 2:\r\n        start_add = session[\"end_air\"]\r\n        end_add = session[\"end_add\"]\r\n        to_lat = session[\"ed_from_lat\"]\r\n        to_long = session[\"ed_from_long\"]\r\n        from_lat = session[\"ed_to_lat\"]\r\n        from_long = session[\"ed_to_long\"]\r\n    cords = {'start_add': start_add, 'end_add': end_add, 'from_lat': from_lat, 'from_long': from_long, 'to_lat': to_lat,\r\n             'to_long': to_long}\r\n    return render_template('map.html', cords=cords)\r\n\r\n\r\n@app.route('/plan', methods=[\"GET\", \"POST\"])\r\ndef plan():\r\n    # if request.method == 'POST':\r\n    #     start_add = request.form.get('start')\r\n    #     end_add = request.form.get('end')\r\n    #     indate = request.form.get('in-date')\r\n    #     # outdate = request.form.get('out-date')\r\n    #     adult = request.form.get('adult')\r\n    #     # child = request.form.get('child')\r\n\r\n    return render_template('plan.html')\r\n\r\n\r\n@app.route('/final', methods=[\"GET\", \"POST\"])\r\ndef final():\r\n    start_add = request.args.get('start_add')\r\n    end_add = request.args.get('end_add')\r\n    flg = request.args.getlist('flg')\r\n    flg = flg[0].strip('[]').split(',')\r\n    flg = [i.strip(\"/\"\" '\") for i in flg]\r\n    start_air = request.args.get('start_air')\r\n    end_air = request.args.get('end_air')\r\n\r\n    start_fare = request.args.get('start_fare')\r\n    end_fare = request.args.get('end_fare')\r\n    start_cab_time = request.args.get('start_cab_time')\r\n    end_cab_time = request.args.get('end_cab_time')\r\n\r\n    print(flg)\r\n    return render_template('final.html', start_cab_time=start_cab_time, end_cab_time=end_cab_time,\r\n                           start_fare=start_fare, end_fare=end_fare, start_air=start_air, end_air=end_air, flg=flg,\r\n                           end_add=end_add, start_add=start_add)\r\n\r\n\r\n@app.route('/login', methods=[\"GET\", \"POST\"])\r\ndef login():\r\n    if request.method == \"POST\":\r\n        email = request.form.get('email')\r\n        password = request.form.get('password')\r\n\r\n        result = db.session.execute(db.select(User).where(User.email == email))\r\n        user = result.scalar()\r\n        if not user:\r\n            flash('Invalid email provided')\r\n            return render_template(\"login.html\")\r\n        if check_password_hash(user.password, password):\r\n            login_user(user)\r\n\r\n            return redirect(url_for('plan'))\r\n        else:\r\n            flash('Password incorrect, please try again')\r\n            return render_template(\"login.html\")\r\n    return render_template(\"login.html\")\r\n\r\n# @app.route('/train', methods=[\"GET\", \"POST\"])\r\n# def train():\r\n    # start= \"Off, Old Mahabalipuram Road, Kamaraj Nagar, Semmancheri, Chennai, Tamil Nadu 600119\"\r\n    # end=\"Kasturba Rd, behind High Court of Karnataka, Ambedkar Veedhi, Sampangi Rama Nagara, Bengaluru, Karnataka 560001\"\r\n    # begin = get_city_from_address(start,rapid_api_key)\r\n    # print(begin)\r\n    # to = get_city_from_address(end,rapid_api_key)\r\n    # result = db.session.execute(db.select(Train).where(Train.place == begin))\r\n    # user = result.scalar()\r\n    # print(user.code)\r\n    #\r\n    # start='MAS'\r\n    # end='SBC'\r\n    # date='2024-04-03'\r\n    # get_tickets_from_stcode(start,end,date,rapid_api_key)\r\n\r\n\r\n\r\n\r\n    # return redirect(url_for('home'))\r\n\r\n\r\n@app.route('/aboutus')\r\ndef aboutus():\r\n    return render_template('aboutus.html')\r\n\r\n\r\n\r\n@app.route('/contact')\r\ndef contact():\r\n    return render_template('contact.html')\r\n\r\n\r\n\r\n@app.route('/logout')\r\n@login_required\r\ndef logout():\r\n    logout_user()\r\n    return redirect(url_for('home'))\r\n\r\n@app.route('/budget')\r\ndef budget():\r\n    return render_template('budget.html')\r\n\r\n@app.route('/destinations')\r\ndef destinations():\r\n    city=\"chennai\"\r\n    amount=\"10000\"\r\n    destinations=search_destinations(city,amount)\r\n    print(destinations)\r\n    return render_template('destinations.html',destinations=destinations)\r\n\r\nif __name__ == \"__main__\":\r\n    app.run(debug=True, port=5000)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 79b5f2530a00cad8d7e20b59ea333663dc9ce98f)
++++ b/main.py	(date 1712133329139)
+@@ -13,7 +13,8 @@
+ from http import HTTPStatus
+ from datetime import datetime
+ from amadeus import Client, ResponseError
+-from OpenAI_API_script import search_destinations
++from OpenAI_API_script import search_destinations,find_nearest_station
++from train import get_tickets_from_stcode
+ 
+ app = Flask(__name__)
+ app.config['SECRET_KEY'] = '8Badawdawdb'
+@@ -30,7 +31,7 @@
+ db.init_app(app)
+ 
+ 
+-rapid_api_key='23f0a5b85cmsh83140e0a39e0664p11dbefjsnd7193ad7a38b'
++rapid_api_key_for_train='3f0c1fbad2msh646adf4f427213ep18e805jsn66ed0b25352a'
+ 
+ # CONFIGURE TABLES
+ class User(db.Model, UserMixin):
+@@ -293,26 +294,23 @@
+             return render_template("login.html")
+     return render_template("login.html")
+ 
+-# @app.route('/train', methods=["GET", "POST"])
+-# def train():
+-    # start= "Off, Old Mahabalipuram Road, Kamaraj Nagar, Semmancheri, Chennai, Tamil Nadu 600119"
+-    # end="Kasturba Rd, behind High Court of Karnataka, Ambedkar Veedhi, Sampangi Rama Nagara, Bengaluru, Karnataka 560001"
+-    # begin = get_city_from_address(start,rapid_api_key)
+-    # print(begin)
+-    # to = get_city_from_address(end,rapid_api_key)
+-    # result = db.session.execute(db.select(Train).where(Train.place == begin))
+-    # user = result.scalar()
+-    # print(user.code)
+-    #
+-    # start='MAS'
+-    # end='SBC'
+-    # date='2024-04-03'
+-    # get_tickets_from_stcode(start,end,date,rapid_api_key)
++@app.route('/train', methods=["GET", "POST"])
++def train():
++    start= "Off, Old Mahabalipuram Road, Kamaraj Nagar, Semmancheri, Chennai, Tamil Nadu 600119"
++    end="Kasturba Rd, behind High Court of Karnataka, Ambedkar Veedhi, Sampangi Rama Nagara, Bengaluru, Karnataka 560001"
++    begin = find_nearest_station(start)
++    print(begin)
++    to = find_nearest_station(end)
++    print(to)
++
+ 
++    date='2024-04-03'
++    l=get_tickets_from_stcode(begin,to,date,rapid_api_key_for_train)
+ 
+ 
+ 
+-    # return redirect(url_for('home'))
++
++    return redirect(url_for('home'))
+ 
+ 
+ @app.route('/aboutus')
+Index: OpenAI_API_script.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#add pip install --upgrade openai to install requirements\r\nimport json,requests,os\r\nfrom dotenv import load_dotenv\r\nload_dotenv()\r\napi_key = os.environ.get(\"OPENAI_API_KEY\")\r\nUNSPLASH_ACCESS_KEY = \"CVCGyPskgBwfmVDGKRF9EfKb9PqkA29lbictam9smAA\"  # Set your Unsplash access key here\r\n# Once you add your API key below, make sure to not share it with anyone! The API key should remain private.\r\nfrom openai import OpenAI\r\n\r\ndef search_destinations(start,budget):\r\n  client = OpenAI(api_key=api_key)\r\n\r\n  completion = client.chat.completions.create(\r\n    model=\"gpt-3.5-turbo\",\r\n    response_format={\"type\":\"json_object\"},\r\n    messages=[\r\n      {\"role\": \"system\", \"content\": \"start fresh.i want the output to be in valid json format the national and international destinations(if applicable) which are under the budget given in rupees by the user and the starting location which is given by user and message to tell any problem occurred or successful . show give me best locations to visit for national and 5 for international if possible no need of descriptions where i can travel with that budget. , all locations should be different from each other, and around india and under budget.if budget is huge then international travel destinations can also be recommended.constraint if budget is less than 8000 then get places within 500km from starting location.if budget is between 8k and 16k then expand to 1000km incremend 500km for every 8k increase in budget.if no international destinations found there should still be a JSON key of int_dest with empty list.the keys in JSON shd be nat_dest,int_dest,message.\"},\r\n      {\"role\": \"user\", \"content\": start+' '+budget}\r\n    ]\r\n  )\r\n\r\n  data=json.loads(completion.choices[0].message.content)\r\n  print(data)\r\n  destinations=data[\"nat_dest\"]+data['int_dest']\r\n\r\n  file=[]\r\n  with_image=[]\r\n  for i in destinations:\r\n    with_image+=[i]\r\n    try:\r\n      # Fetch photo of the city from Unsplash\r\n      response = requests.get(\r\n        f\"https://api.unsplash.com/search/photos?query={i}&orientation=landscape\",\r\n        headers={\"Authorization\": f\"Client-ID {UNSPLASH_ACCESS_KEY}\"}\r\n      )\r\n      response.raise_for_status()  # Raise an exception for HTTP errors\r\n      data = response.json()\r\n\r\n      # Extract image URL and user information from the response\r\n      photo = data[\"results\"][0]\r\n      image_urls = photo[\"urls\"][\"regular\"]\r\n      with_image+=[image_urls]\r\n    except Exception as e:\r\n      with_image+=[\"https://source.unsplash.com/600x900/?tech,street\"]\r\n    file+=[with_image]\r\n    with_image=[]\r\n  return file\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/OpenAI_API_script.py b/OpenAI_API_script.py
+--- a/OpenAI_API_script.py	(revision 79b5f2530a00cad8d7e20b59ea333663dc9ce98f)
++++ b/OpenAI_API_script.py	(date 1712131557624)
+@@ -47,4 +47,18 @@
+   return file
+ 
+ 
++def find_nearest_station(address):
++  client = OpenAI(api_key=api_key)
+ 
++  completion = client.chat.completions.create(
++    model="gpt-3.5-turbo",
++    response_format={"type": "json_object"},
++    messages=[
++      {"role": "system","content": "return json containing key train station code only for the nearest major train station for the given address"},
++      {"role": "user", "content": address}
++    ]
++  )
++
++  data = json.loads(completion.choices[0].message.content)
++  return(data['train_station_code'])
++#find_nearest_station("Off, Old Mahabalipuram Road, Kamaraj Nagar, Semmancheri, Chennai, Tamil Nadu 600119")
+\ No newline at end of file
+Index: .env
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.env b/.env
+new file mode 100644
+--- /dev/null	(date 1712123003333)
++++ b/.env	(date 1712123003333)
+@@ -0,0 +1,2 @@
++# Once you add your API key below, make sure to not share it with anyone! The API key should remain private.
++OPENAI_API_KEY="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"
+\ No newline at end of file

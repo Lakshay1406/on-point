@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1db3c108-9031-403b-bca1-53c5c7a010e2" name="Changes" comment="proper functioning of budget" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="origin/master" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="KEEP" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="a9cd4638-d7ff-4223-82d8-7584d8816954" />
+        <option name="url" value="https://github.com/Lakshay1406/on-point.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2bnQSoW1VLe3AOy9cGGPoSyCuMy" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Laptop/PycharmProjects/on-point/instance&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;ChangesTree.GroupingKeys&quot;: [
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point\instance" />
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point\static" />
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point\templates" />
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point" />
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point\instance" />
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point\templates" />
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point\static\images" />
+      <recent name="C:\Users\Laptop\PycharmProjects\on-point\static\map" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="on-point" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1db3c108-9031-403b-bca1-53c5c7a010e2" name="Changes" comment="" />
+      <created>1706848365615</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1706848365615</updated>
+    </task>
+    <task id="LOCAL-00001" summary="intial commit">
+      <created>1707210030706</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707210030706</updated>
+    </task>
+    <task id="LOCAL-00002" summary="made the flight details clear">
+      <created>1707228442879</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1707228442879</updated>
+    </task>
+    <task id="LOCAL-00003" summary="made the flight details clear">
+      <created>1707228707208</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1707228707208</updated>
+    </task>
+    <task id="LOCAL-00004" summary="made the flight details clear">
+      <created>1707363883361</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1707363883361</updated>
+    </task>
+    <task id="LOCAL-00005" summary="map working created abcd html file and api.py">
+      <created>1707363921646</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707363921646</updated>
+    </task>
+    <task id="LOCAL-00006" summary="map working created abcd html file and api.py">
+      <created>1707364106027</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1707364106027</updated>
+    </task>
+    <task id="LOCAL-00007" summary="map working created abcd html file and api.py">
+      <created>1707366368315</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1707366368315</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fully functional">
+      <created>1707415709211</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1707415709211</updated>
+    </task>
+    <task id="LOCAL-00009" summary="changed title and icon">
+      <created>1707416501902</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1707416501902</updated>
+    </task>
+    <task id="LOCAL-00010" summary="made it look clean">
+      <created>1707532299094</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1707532299094</updated>
+    </task>
+    <task id="LOCAL-00011" summary="made it look clean">
+      <created>1711602852650</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1711602852650</updated>
+    </task>
+    <task id="LOCAL-00012" summary="destination display with card">
+      <created>1712121002857</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1712121002857</updated>
+    </task>
+    <task id="LOCAL-00013" summary="destination display with card">
+      <created>1712123760146</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1712123760146</updated>
+    </task>
+    <task id="LOCAL-00014" summary="proper functioning of budget">
+      <created>1712169288775</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1712169288775</updated>
+    </task>
+    <task id="LOCAL-00015" summary="proper functioning of budget">
+      <created>1712216876615</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1712216876615</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Revert &quot;proper functioning of budget&quot;&#10;&#10;This reverts commit 239f81a0">
+      <created>1712216910534</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1712216910534</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="intial commit" />
+    <MESSAGE value="map is working individually and added abcd html file and api.py file" />
+    <MESSAGE value="made the flight details clear" />
+    <MESSAGE value="map working created abcd html file and api.py" />
+    <MESSAGE value="fully functional" />
+    <MESSAGE value="changed title and icon" />
+    <MESSAGE value="made it look clean" />
+    <MESSAGE value="destination display with card" />
+    <MESSAGE value="proper functioning of budget" />
+    <MESSAGE value="Revert &quot;proper functioning of budget&quot;&#10;&#10;This reverts commit 239f81a0" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revert &quot;proper functioning of budget&quot;&#10;&#10;This reverts commit 239f81a0" />
+  </component>
+</project>

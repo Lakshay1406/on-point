@@ -3,7 +3,8 @@ import json,requests,os
 from dotenv import load_dotenv
 load_dotenv()
 api_key = os.environ.get("OPENAI_API_KEY")
-UNSPLASH_ACCESS_KEY = "CVCGyPskgBwfmVDGKRF9EfKb9PqkA29lbictam9smAA"  # Set your Unsplash access key here
+print("API Key:", api_key)
+UNSPLASH_ACCESS_KEY = os.environ.get("UNSPLASH_ACCESS_KEY")  # Set your Unsplash access key here
 # Once you add your API key below, make sure to not share it with anyone! The API key should remain private.
 from openai import OpenAI
 
@@ -22,7 +23,7 @@ def search_destinations(query):
   data=json.loads(completion.choices[0].message.content)
   print(data)
   destinations=data["nat_dest"]+data['int_dest']
-
+  print(destinations)
   file=[]
   with_image=[]
   for i in destinations:
@@ -44,6 +45,7 @@ def search_destinations(query):
       with_image+=["https://source.unsplash.com/600x900/?tech,street"]
     file+=[with_image]
     with_image=[]
+    # print(file)
   return file
 
 
